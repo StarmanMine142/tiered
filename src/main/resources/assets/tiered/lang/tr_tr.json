@@ -41,8 +41,5 @@
 	"tier.tiered.standard_tools.rare": "Nadir",
 	"tier.tiered.standard_weapons.common": "Yaygın",
 	"tier.tiered.tools.extended": "Genişletilmiş",
-	"tier.tiered.melee_weapons.extended": "Genişletilmiş",
-	"item.tiered.weaponsmiths_hammer": "Weaponsmiths Hammer",
-	"item.tiered.toolsmiths_hammer": "Toolsmiths Hammer",
-	"item.tiered.armorers_hammer": "Armorers Hammer"
+	"tier.tiered.melee_weapons.extended": "Genişletilmiş"
 }

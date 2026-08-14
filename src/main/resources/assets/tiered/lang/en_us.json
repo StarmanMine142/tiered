@@ -49,9 +49,7 @@
 	"tier.tiered.spears.top_heavy": "Top Heavy",
 	"tier.tiered.spears.anchoring": "Anchoring",
 
-	"item.tiered.weaponsmiths_hammer": "Weaponsmiths Hammer",
-	"item.tiered.toolsmiths_hammer": "Toolsmiths Hammer",
-	"item.tiered.armorers_hammer": "Armorers Hammer",
+	"item.tiered.smithing_hammer": "Smithing Hammer",
 
 	"attribute.name.generic.critical_damage": "Critical Damage",
 	"attribute.name.generic.critical_rate": "Critical Rate",

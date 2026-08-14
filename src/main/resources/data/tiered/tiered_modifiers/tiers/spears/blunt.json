@@ -2,13 +2,12 @@
   "weight": 2,
   "reforge_experience_cost": 1,
   "reforge_durability_cost": 1,
-  "reforge_item": "tiered:weaponsmiths_hammer",
   "style": {
     "color": "#832fd6"
   },
   "attributes": [
     {
-      "type": "attack_damage",
+      "type": "minecraft:generic.attack_damage",
       "modifier": {
         "id": "tiered:blunt",
         "operation": "ADD_MULTIPLIED_TOTAL",

@@ -40,9 +40,5 @@
 	"tier.tiered.standard_tools.legendary": "전설적인",
 	"tier.tiered.standard_tools.rare": "희귀한",
 	"tier.tiered.standard_weapons.common": "흔한",
-	"tier.tiered.tools.extended": "연장된",
-
-	"item.tiered.weaponsmiths_hammer": "무기 대장장이의 망치",
-	"item.tiered.toolsmiths_hammer": "도구 대장장이의 망치",
-	"item.tiered.armorers_hammer": "갑옷 제조인의 망치"
+	"tier.tiered.tools.extended": "연장된"
 }

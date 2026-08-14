@@ -2,13 +2,12 @@
   "weight": 2,
   "reforge_experience_cost": 2,
   "reforge_durability_cost": 1,
-  "reforge_item": "tiered:weaponsmiths_hammer",
   "style": {
     "color": "#a13271"
   },
   "attributes": [
     {
-      "type": "attack_knockback",
+      "type": "minecraft:generic.attack_knockback",
       "modifier": {
         "id": "tiered:anchoring_0",
         "operation": "ADD_VALUE",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "type": "entity_interaction_range",
+      "type": "minecraft:player.entity_interaction_range",
       "modifier": {
         "id": "tiered:anchoring_1",
         "operation": "ADD_VALUE",
@@ -30,7 +29,7 @@
       ]
     },
     {
-      "type": "attack_speed",
+      "type": "minecraft:generic.attack_speed",
       "modifier": {
         "id": "tiered:anchoring_2",
         "operation": "ADD_MULTIPLIED_TOTAL",

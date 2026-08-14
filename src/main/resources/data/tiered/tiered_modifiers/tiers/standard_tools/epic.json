@@ -2,13 +2,12 @@
   "weight": 2,
   "reforge_experience_cost": 8,
   "reforge_durability_cost": 4,
-  "reforge_item": "tiered:toolsmiths_hammer",
   "style": {
     "color": "dark_purple"
   },
   "attributes": [
     {
-      "type": "block_break_speed",
+      "type": "minecraft:player.block_break_speed",
       "modifier": {
         "id": "tiered:epic_tool_1",
         "operation": "ADD_VALUE",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "type": "attack_speed",
+      "type": "minecraft:generic.attack_speed",
       "modifier": {
         "id": "tiered:epic_tool_2",
         "operation": "ADD_VALUE",

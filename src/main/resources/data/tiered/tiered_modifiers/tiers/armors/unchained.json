@@ -2,13 +2,12 @@
   "weight": 3,
   "reforge_experience_cost": 3,
   "reforge_durability_cost": 2,
-  "reforge_item": "tiered:armorers_hammer",
   "style": {
     "color": "dark_red"
   },
   "attributes": [
     {
-      "type": "armor",
+      "type": "minecraft:generic.armor",
       "modifier": {
         "id": "tiered:unchained_1",
         "operation": "ADD_VALUE",
@@ -22,7 +21,7 @@
       ]
     },
     {
-      "type": "attack_damage",
+      "type": "minecraft:generic.attack_damage",
       "modifier": {
         "id": "tiered:unchained_2",
         "operation": "ADD_MULTIPLIED_TOTAL",

@@ -18,12 +18,12 @@ import net.minecraft.world.item.ItemStack;
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
 
-    @Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V", at = @At("TAIL"))
-    private void go(EquipmentSlotGroup slot, BiConsumer<Holder<Attribute>, AttributeModifier> pAction, CallbackInfo ci) {
-    	ItemStack thisStack = (ItemStack)(Object)this;
-    	Tiered.AppendAttributesToOriginal(thisStack, slot, Tiered.isPreferredEquipmentSlot(thisStack, slot), "AttributeModifiers",
-				template -> template.getRequiredEquipmentSlot(), 
-				template -> template.getOptionalEquipmentSlot(), 
+	@Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V", at = @At("TAIL"))
+	private void go(EquipmentSlotGroup slot, BiConsumer<Holder<Attribute>, AttributeModifier> pAction, CallbackInfo ci) {
+		ItemStack thisStack = (ItemStack)(Object)this;
+		Tiered.AppendAttributesToOriginal(thisStack, slot, Tiered.isPreferredEquipmentSlot(thisStack, slot), "AttributeModifiers",
+				template -> template.getRequiredEquipmentSlot(),
+				template -> template.getOptionalEquipmentSlot(),
 				(template) -> template.realize(pAction, slot));
-    }
+	}
 }

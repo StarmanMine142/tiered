@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "tiered:item/blacksmiths_hammer"
+        "layer0": "tiered:item/smithing_hammer"
     }
 }

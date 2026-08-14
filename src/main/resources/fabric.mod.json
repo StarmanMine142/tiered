@@ -9,7 +9,8 @@
   ],
   "contact": {
     "homepage": "${mod_page}",
-    "issues": "${mod_issue_tracker}"
+    "issues": "${mod_issue_tracker}",
+    "source": "${mod_source}"
   },
   "license": "${mod_license}",
   "icon": "assets/${mod_id}/pack.png",

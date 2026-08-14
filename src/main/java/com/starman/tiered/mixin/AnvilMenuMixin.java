@@ -11,10 +11,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.ItemCombinerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.TieredItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +32,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 		ItemStack inputItem = this.inputSlots.getItem(0);
 		ItemStack materialItem = this.inputSlots.getItem(1);
 
-		if (Tiered.hasModifier(inputItem) && isValidHammerFor(inputItem, materialItem)) {
+		if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
 			ResourceLocation modifierId = inputItem.get(Tiered.MODIFIER);
 			if (modifierId != null) {
 				PotentialAttribute potential = Tiered.TIER_DATA.getTiers().get(modifierId);
@@ -58,7 +55,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 	private void tiered$onTake(Player player, ItemStack outputStack, CallbackInfo ci) {
 		ItemStack materialItem = this.inputSlots.getItem(1);
 
-		if (Tiered.hasModifier(outputStack) && isValidHammerFor(outputStack, materialItem)) {
+		if (Tiered.hasModifier(outputStack) && isValidHammer(materialItem)) {
 			ResourceLocation currentModifierId = outputStack.get(Tiered.MODIFIER);
 			if (currentModifierId != null) {
 				PotentialAttribute potential = Tiered.TIER_DATA.getTiers().get(currentModifierId);
@@ -106,14 +103,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 		}
 	}
 
-	private boolean isValidHammerFor(ItemStack targetItem, ItemStack hammerItem) {
-		if (targetItem.getItem() instanceof ArmorItem) {
-			return hammerItem.is(Tiered.ARMORERS_HAMMER);
-		} else if (targetItem.getItem() instanceof SwordItem) {
-			return hammerItem.is(Tiered.WEAPONSMITHS_HAMMER);
-		} else if (targetItem.getItem() instanceof TieredItem) {
-			return hammerItem.is(Tiered.TOOLSMITHS_HAMMER);
-		}
-		return false;
+	private boolean isValidHammer(ItemStack hammerItem) {
+		return hammerItem.is(Tiered.SMITHING_HAMMER);
 	}
 }

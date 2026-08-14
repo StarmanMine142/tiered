@@ -8,9 +8,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.starman.tiered.api.TieredAttributes;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.item.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,9 +34,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
 
 public class Tiered implements ModInitializer {
 
@@ -72,11 +71,6 @@ public class Tiered implements ModInitializer {
             ResourceLocation.fromNamespaceAndPath("tiered", "rings")
     };
 
-    public static final Map<String, ResourceLocation> CURIO_MODIFIERS = Util.make(Maps.newHashMap(), (map) -> {
-        map.put("back", ResourceLocation.fromNamespaceAndPath("tiered", "curio_back"));
-        map.put("ring", ResourceLocation.fromNamespaceAndPath("tiered", "curio_rings"));
-    });
-
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String ID = "tiered";
     public static Tiered instance;
@@ -90,9 +84,7 @@ public class Tiered implements ModInitializer {
                     .build()
     );
 
-    public static final Item ARMORERS_HAMMER = registerItem("armorers_hammer", new Item(new Item.Properties().durability(20)));
-    public static final Item TOOLSMITHS_HAMMER = registerItem("toolsmiths_hammer", new Item(new Item.Properties().durability(20)));
-    public static final Item WEAPONSMITHS_HAMMER = registerItem("weaponsmiths_hammer", new Item(new Item.Properties().durability(20)));
+    public static final Item SMITHING_HAMMER = registerItem("smithing_hammer", new Item(new Item.Properties().durability(20)));
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(ID, name), item);
@@ -102,6 +94,10 @@ public class Tiered implements ModInitializer {
     public void onInitialize() {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(TIER_DATA);
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(POOL_DATA);
+
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(content -> {
+            content.addAfter(Items.BRUSH, SMITHING_HAMMER);
+        });
 
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (net.minecraft.server.level.ServerPlayer player : server.getPlayerList().getPlayers()) {

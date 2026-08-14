@@ -3,6 +3,7 @@ package com.starman.tiered.mixin;
 import java.util.function.Consumer;
 
 import com.starman.tiered.Tiered;
+import com.starman.tiered.grammar.TierGrammarManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,6 +15,7 @@ import com.starman.tiered.api.PotentialAttribute;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponents;
@@ -53,17 +55,58 @@ public abstract class ItemStackClientMixin implements DataComponentHolder {
             cancellable = true
     )
     private void modifyName(CallbackInfoReturnable<Component> cir) {
-        if(this.get(DataComponents.CUSTOM_NAME) == null && Tiered.hasModifier((ItemStack)(Object)this)) {
-            ResourceLocation tier = ((ItemStack)(Object)this).get(Tiered.MODIFIER);
+        ItemStack stack = (ItemStack)(Object)this;
+        if(this.get(DataComponents.CUSTOM_NAME) == null && Tiered.hasModifier(stack)) {
+            ResourceLocation tier = stack.get(Tiered.MODIFIER);
 
             PotentialAttribute potentialAttribute = Tiered.TIER_DATA.getTiers().get(tier);
 
             if(potentialAttribute != null) {
                 MutableComponent title;
-                if (potentialAttribute.getLiteralName() != null) title = Component.literal(potentialAttribute.getLiteralName());
-                else title = Component.translatable(Util.makeDescriptionId("tier", Tiered.getKey(potentialAttribute)));
-                cir.setReturnValue(title.append(" ").append(cir.getReturnValue()).setStyle(potentialAttribute.getStyle()));
+                if (potentialAttribute.getLiteralName() != null) {
+                    title = Component.literal(potentialAttribute.getLiteralName());
+                } else {
+                    String descriptionId = Util.makeDescriptionId("tier", Tiered.getKey(potentialAttribute));
+
+                    String rawTranslation = I18n.exists(descriptionId) ? I18n.get(descriptionId) : descriptionId;
+
+                    if (rawTranslation.contains("|")) {
+                        String[] forms = rawTranslation.split("\\|");
+                        int formIndex = TierGrammarManager.getIndexFor(tier, stack.getItem());
+                        String selectedForm = forms[Math.min(formIndex, forms.length - 1)];
+                        title = Component.literal(selectedForm);
+                    } else {
+                        title = Component.translatable(descriptionId);
+                    }
+                }
+
+                Component originalItemName = cir.getReturnValue();
+                Component finalItemName;
+
+                if (TierGrammarManager.shouldLowercaseItemName()) {
+                    finalItemName = lowerCaseFirstLetterComponent(originalItemName);
+                } else {
+                    finalItemName = originalItemName;
+                }
+
+                cir.setReturnValue(title.append(" ").append(finalItemName).setStyle(potentialAttribute.getStyle()));
             }
         }
+    }
+
+    private Component lowerCaseFirstLetterComponent(Component component) {
+        String text = component.getString();
+        if (text == null || text.isEmpty()) {
+            return component;
+        }
+
+        String lowerText = Character.toLowerCase(text.charAt(0)) + text.substring(1);
+
+        MutableComponent modified = Component.literal(lowerText).setStyle(component.getStyle());
+        for (Component sibling : component.getSiblings()) {
+            modified.append(sibling);
+        }
+
+        return modified;
     }
 }

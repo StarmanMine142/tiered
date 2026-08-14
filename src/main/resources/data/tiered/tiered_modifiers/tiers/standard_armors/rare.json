@@ -2,13 +2,12 @@
   "weight": 4,
   "reforge_experience_cost": 6,
   "reforge_durability_cost": 3,
-  "reforge_item": "tiered:armorers_hammer",
   "style": {
     "color": "blue"
   },
   "attributes": [
     {
-      "type": "max_health",
+      "type": "minecraft:generic.max_health",
       "modifier": {
         "id": "tiered:rare_armor_0",
         "operation": "ADD_VALUE",
@@ -22,7 +21,7 @@
       ]
     },
     {
-      "type": "armor",
+      "type": "minecraft:generic.armor",
       "modifier": {
         "id": "tiered:rare_armor_1",
         "operation": "ADD_VALUE",

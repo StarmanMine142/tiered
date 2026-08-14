@@ -2,13 +2,12 @@
   "weight": 2,
   "reforge_experience_cost": 2,
   "reforge_durability_cost": 1,
-  "reforge_item": "tiered:weaponsmiths_hammer",
   "style": {
     "color": "#632ded"
   },
   "attributes": [
     {
-      "type": "attack_damage",
+      "type": "minecraft:generic.attack_damage",
       "modifier": {
         "id": "tiered:piercing_0",
         "operation": "ADD_MULTIPLIED_TOTAL",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "type": "entity_interaction_range",
+      "type": "minecraft:player.entity_interaction_range",
       "modifier": {
         "id": "tiered:piercing_1",
         "operation": "ADD_VALUE",

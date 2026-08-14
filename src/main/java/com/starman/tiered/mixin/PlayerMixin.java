@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(Player.class)
 public class PlayerMixin {
-
     @ModifyVariable(
             method = "attack",
             at = @At(

@@ -2,13 +2,12 @@
   "weight": 2,
   "reforge_experience_cost": 8,
   "reforge_durability_cost": 4,
-  "reforge_item": "tiered:armorers_hammer",
   "style": {
     "color": "dark_purple"
   },
   "attributes": [
     {
-      "type": "max_health",
+      "type": "minecraft:generic.max_health",
       "modifier": {
         "id": "tiered:epic_armor_0",
         "operation": "ADD_VALUE",
@@ -22,7 +21,7 @@
       ]
     },
     {
-      "type": "armor",
+      "type": "minecraft:generic.armor",
       "modifier": {
         "id": "tiered:epic_armor_1",
         "operation": "ADD_VALUE",
@@ -36,7 +35,7 @@
       ]
     },
     {
-      "type": "armor_toughness",
+      "type": "minecraft:generic.armor_toughness",
       "modifier": {
         "id": "tiered:epic_armor_2",
         "operation": "ADD_VALUE",

@@ -19,14 +19,13 @@ public class PotentialAttribute {
 							Codec.INT.fieldOf("weight").forGetter(PotentialAttribute::getWeight),
 							Codec.INT.fieldOf("reforge_durability_cost").forGetter(PotentialAttribute::getReforgeDurabilityCost),
 							Codec.INT.fieldOf("reforge_experience_cost").forGetter((pa) -> pa.reforge_experience_cost),
-							Codec.STRING.fieldOf("reforge_item").forGetter(PotentialAttribute::getReforgeItem),
 							ItemVerifier.CODEC.listOf().optionalFieldOf("verifiers", List.of()).forGetter(PotentialAttribute::getVerifiers),
 							ItemVerifier.CODEC.listOf().optionalFieldOf("exclusions", List.of()).forGetter(PotentialAttribute::getExclusions),
 							Style.Serializer.CODEC.fieldOf("style").forGetter(PotentialAttribute::getStyle),
 							AttributeTemplate.CODEC.listOf().fieldOf("attributes").forGetter(PotentialAttribute::getAttributes)
 					)
-					.apply(i, (id, literal_name, weight, reforge_durability_cost, reforge_experience_cost, reforge_item, verifiers, exclusions, style, attributes) ->
-							new PotentialAttribute(id.orElse(null), literal_name.orElse(null), weight, reforge_durability_cost, reforge_experience_cost, reforge_item, verifiers, exclusions, style, attributes))
+					.apply(i, (id, literal_name, weight, reforge_durability_cost, reforge_experience_cost, verifiers, exclusions, style, attributes) ->
+							new PotentialAttribute(id.orElse(null), literal_name.orElse(null), weight, reforge_durability_cost, reforge_experience_cost, verifiers, exclusions, style, attributes))
 	);
 
 	private final String id;
@@ -35,7 +34,6 @@ public class PotentialAttribute {
 
 	private final int reforge_durability_cost;
 	private final int reforge_experience_cost;
-	private final String reforge_item;
 	private final List<ItemVerifier> verifiers;
 	private final List<ItemVerifier> exclusions;
 	private final Style style;
@@ -44,14 +42,13 @@ public class PotentialAttribute {
 
 	public PotentialAttribute(String id, String literal_name,
 							  int weight, int reforge_durability_cost, int reforge_experience_cost,
-							  String reforge_item, List<ItemVerifier> verifiers, List<ItemVerifier> exclusions,
+							  List<ItemVerifier> verifiers, List<ItemVerifier> exclusions,
 							  Style style, List<AttributeTemplate> attributes) {
 		this.id = id;
 		this.literal_name = literal_name;
 		this.weight = weight;
 		this.reforge_durability_cost = reforge_durability_cost;
 		this.reforge_experience_cost = reforge_experience_cost;
-		this.reforge_item = reforge_item;
 		this.verifiers = verifiers;
 		this.exclusions = exclusions;
 		this.style = style;
@@ -77,10 +74,6 @@ public class PotentialAttribute {
 
 	public long getReforgeExperienceCost() {
 		return Math.max(reforge_experience_cost, 1);
-	}
-
-	public String getReforgeItem() {
-		return reforge_item;
 	}
 
 	public List<ItemVerifier> getVerifiers() {

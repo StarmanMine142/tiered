@@ -15,6 +15,7 @@ def resourceTargets = [
 		min_loader_version: min_loader_version,
 		mod_page: mod_page,
 		mod_version: mod_version,
+		mod_source: mod_source,
 		mod_issue_tracker: mod_issue_tracker,
 		mod_name: mod_name,
 		mod_license: mod_license,

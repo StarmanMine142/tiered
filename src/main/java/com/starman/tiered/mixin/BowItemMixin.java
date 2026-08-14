@@ -3,7 +3,6 @@ package com.starman.tiered.mixin;
 import com.starman.tiered.api.TieredAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.BowItem;
@@ -29,23 +28,20 @@ public abstract class BowItemMixin extends ProjectileWeaponItem {
                     target = "Lnet/minecraft/world/item/BowItem;getPowerForTime(I)F"
             )
     )
-    private float tiered$redirectGetPowerForTime(int charge, ItemStack stack, Level level, LivingEntity entityLiving, int timeLeft) {
-        if (entityLiving instanceof Player player) {
-            double speed = 1.0;
-            if (player.getAttribute(TieredAttributes.DRAW_SPEED) != null) {
-                speed = player.getAttributeValue(TieredAttributes.DRAW_SPEED);
-            }
-
-            float calculateSpeed = (float) (20.0 / speed);
-
-            float f = (float) charge / calculateSpeed;
-            f = (f * f + f * 2.0F) / 3.0F;
-            if (f > 1.0F) {
-                f = 1.0F;
-            }
-            return f;
+    private static float tiered$redirectGetPowerForTime(int charge, ItemStack stack, Level level, LivingEntity entityLiving, int timeLeft) {
+        double speed = 1.0;
+        if (entityLiving.getAttribute(TieredAttributes.DRAW_SPEED) != null) {
+            speed = entityLiving.getAttributeValue(TieredAttributes.DRAW_SPEED);
         }
-        return BowItem.getPowerForTime(charge);
+
+        float effectiveCharge = charge * (float) speed;
+
+        float f = effectiveCharge / 20.0F;
+        f = (f * f + f * 2.0F) / 3.0F;
+        if (f > 1.0F) {
+            f = 1.0F;
+        }
+        return f;
     }
 
     @Redirect(
@@ -56,30 +52,28 @@ public abstract class BowItemMixin extends ProjectileWeaponItem {
             )
     )
     private void tiered$redirectShootFromRotation(Projectile projectile, Entity shooter, float x, float y, float z, float velocity, float inaccuracy) {
-        if (shooter instanceof Player player) {
-            float accuracy = 1.0F;
-            float arrowVelocity = 1.0F;
-            float arrowDamage = 0.0F;
+        float accuracy = 1.0F;
+        float arrowVelocity = 1.0F;
+        float arrowDamage = 0.0F;
 
-            if (player.getAttribute(TieredAttributes.ACCURACY) != null) {
-                accuracy = (float) player.getAttributeValue(TieredAttributes.ACCURACY);
+        if (shooter instanceof LivingEntity livingEntity) {
+            if (livingEntity.getAttribute(TieredAttributes.ACCURACY) != null) {
+                accuracy = (float) livingEntity.getAttributeValue(TieredAttributes.ACCURACY);
             }
 
-            if (player.getAttribute(TieredAttributes.ARROW_VELOCITY) != null) {
-                arrowVelocity = (float) player.getAttributeValue(TieredAttributes.ARROW_VELOCITY);
+            if (livingEntity.getAttribute(TieredAttributes.ARROW_VELOCITY) != null) {
+                arrowVelocity = (float) livingEntity.getAttributeValue(TieredAttributes.ARROW_VELOCITY);
             }
 
-            if (player.getAttribute(TieredAttributes.ARROW_DAMAGE) != null) {
-                arrowDamage = (float) player.getAttributeValue(TieredAttributes.ARROW_DAMAGE);
+            if (livingEntity.getAttribute(TieredAttributes.ARROW_DAMAGE) != null) {
+                arrowDamage = (float) livingEntity.getAttributeValue(TieredAttributes.ARROW_DAMAGE);
             }
+        }
 
-            projectile.shootFromRotation(shooter, x, y, z, velocity * arrowVelocity, 2.0F - accuracy * 2.0F);
+        projectile.shootFromRotation(shooter, x, y, z, velocity * arrowVelocity, 2.0F - accuracy * 2.0F);
 
-            if (projectile instanceof AbstractArrow arrow) {
-                arrow.setBaseDamage(arrow.getBaseDamage() + arrowDamage);
-            }
-        } else {
-            projectile.shootFromRotation(shooter, x, y, z, velocity, inaccuracy);
+        if (projectile instanceof AbstractArrow arrow) {
+            arrow.setBaseDamage(arrow.getBaseDamage() + arrowDamage);
         }
     }
 }

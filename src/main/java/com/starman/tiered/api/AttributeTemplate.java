@@ -194,14 +194,6 @@ public class AttributeTemplate {
 		realize(actions, Tiered.MODIFIERS[slot.ordinal()]);
 	}
 
-	public void realize(BiConsumer<Holder<Attribute>, AttributeModifier> actions, EquipmentSlot slot) {
-		realize(actions, Tiered.MODIFIERS[slot.ordinal()]);
-	}
-
-	public void realize(BiConsumer<Holder<Attribute>, AttributeModifier> actions, String slot, int index) {
-		realize(actions, Tiered.CURIO_MODIFIERS.getOrDefault(slot, ResourceLocation.fromNamespaceAndPath("tiered", slot)).withSuffix("_"+index));
-	}
-
 	private void realize(BiConsumer<Holder<Attribute>, AttributeModifier> actions, ResourceLocation id) {
 		AttributeModifier cloneModifier = new AttributeModifier(
 				id.withPrefix("tiered_"+attributeModifier.id().getPath()),

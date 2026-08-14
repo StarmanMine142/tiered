@@ -1,0 +1,22 @@
+{
+  "weight": 3,
+  "reforge_experience_cost": 3,
+  "reforge_durability_cost": 2,
+  "reforge_item": "tiered:weaponsmiths_hammer",
+  "style": {
+    "color": "aqua"
+  },
+  "attributes": [
+    {
+      "type": "tiered:generic.accuracy",
+      "modifier": {
+        "id": "tiered:light",
+        "operation": "ADD_VALUE",
+        "amount": 0.4
+      },
+      "optional_equipment_slots": [
+        "HAND"
+      ]
+    }
+  ]
+}

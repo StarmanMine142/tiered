@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_authors}"
+  ],
+  "contact": {
+    "homepage": "${mod_page}",
+    "issues": "${mod_issue_tracker}"
+  },
+  "license": "${mod_license}",
+  "icon": "assets/${mod_id}/pack.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.starman.tiered.Tiered"
+    ],
+    "client": [
+      "com.starman.tiered.TieredClient"
+    ],
+    "modmenu": [
+      "com.starman.tiered.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${min_loader_version}",
+    "fabric-api": "*",
+    "minecraft": ">=${minecraft_version}",
+    "java": ">=${java_version}"
+  },
+  "suggests": {
+    "cloth-config": "*",
+    "modmenu": "*"
+  },
+  "accessWidener": "${mod_id}.accesswidener"
+}

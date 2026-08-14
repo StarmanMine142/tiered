@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "package": "com.starman.tiered.mixin",
+  "refmap": "tiered.refmap.json",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AbstractContainerMenuMixin",
+    "AnvilMenuMixin",
+    "BowItemMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "PlayerMixin",
+    "ServerPlayerEntityMixin"
+  ],
+  "client": [
+    "ItemStackClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

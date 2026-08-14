@@ -1,0 +1,22 @@
+{
+  "weight": 2,
+  "verifiers": [
+    {
+      "tag": "c:tools/spears"
+    },
+    {
+      "tag": "c:tools/tridents"
+    },
+    {
+      "tag": "minecraft:spears"
+    }
+  ],
+  "tiers": [
+    "tiered:spears/piercing",
+    "tiered:spears/lunging",
+    "tiered:spears/forceful",
+    "tiered:melee_weapons/epic",
+    "tiered:melee_weapons/legendary",
+    "tiered:melee_weapons/rare"
+  ]
+}

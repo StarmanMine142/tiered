@@ -5,4 +5,6 @@
 - Items name in langs, what in `lowercase_langs.json` alweys written with lowercase
 - 3 hammers replaced with 1 universal hammer
 - Added craft for hammer
+- Hammer uses `handled` parent model
 - Added Ukrainian
+-

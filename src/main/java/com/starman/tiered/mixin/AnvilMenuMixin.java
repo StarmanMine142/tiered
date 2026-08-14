@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -21,89 +22,102 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AnvilMenu.class)
 public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 
-	@Shadow private DataSlot cost;
+    @Shadow private DataSlot cost;
 
-	public AnvilMenuMixin(MenuType<?> type, int syncId, Inventory inventory, ContainerLevelAccess access) {
-		super(type, syncId, inventory, access);
-	}
+    @Unique private ItemStack tiered$lastInputItem = ItemStack.EMPTY;
+    @Unique private ResourceLocation tiered$cachedNextModifier = null;
 
-	@Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
-	private void tiered$createResult(CallbackInfo ci) {
-		ItemStack inputItem = this.inputSlots.getItem(0);
-		ItemStack materialItem = this.inputSlots.getItem(1);
+    public AnvilMenuMixin(MenuType<?> type, int syncId, Inventory inventory, ContainerLevelAccess access) {
+        super(type, syncId, inventory, access);
+    }
 
-		if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
-			ResourceLocation modifierId = inputItem.get(Tiered.MODIFIER);
-			if (modifierId != null) {
-				PotentialAttribute potential = Tiered.TIER_DATA.getTiers().get(modifierId);
-				if (potential != null) {
-					ItemStack result = inputItem.copy();
-					this.resultSlots.setItem(0, result);
+    @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
+    private void tiered$createResult(CallbackInfo ci) {
+        ItemStack inputItem = this.inputSlots.getItem(0);
+        ItemStack materialItem = this.inputSlots.getItem(1);
 
-					if (this.cost != null) {
-						this.cost.set((int) potential.getReforgeExperienceCost());
-					}
+        if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
+            ResourceLocation currentModifierId = inputItem.get(Tiered.MODIFIER);
+            if (currentModifierId != null) {
+                if (tiered$cachedNextModifier == null || !ItemStack.isSameItemSameComponents(inputItem, tiered$lastInputItem)) {
+                    tiered$lastInputItem = inputItem.copy();
+                    ResourceLocation newModifierId = ModifierUtils.getRandomAttributeIDFor(inputItem.getItem());
+                    int attempts = 0;
+                    while ((newModifierId.equals(currentModifierId) || newModifierId.equals(ModifierUtils.BLANK)) && attempts < 5) {
+                        newModifierId = ModifierUtils.getRandomAttributeIDFor(inputItem.getItem());
+                        attempts++;
+                    }
+                    tiered$cachedNextModifier = newModifierId;
+                }
 
-					this.broadcastChanges();
-					ci.cancel();
-				}
-			}
-		}
-	}
+                PotentialAttribute nextPotential = Tiered.TIER_DATA.getTiers().get(tiered$cachedNextModifier);
+                if (nextPotential != null) {
+                    ItemStack result = inputItem.copy();
+                    result.remove(Tiered.MODIFIER);
+                    this.resultSlots.setItem(0, result);
 
-	@Inject(method = "onTake", at = @At("HEAD"), cancellable = true)
-	private void tiered$onTake(Player player, ItemStack outputStack, CallbackInfo ci) {
-		ItemStack materialItem = this.inputSlots.getItem(1);
+                    if (this.cost != null) {
+                        this.cost.set((int) nextPotential.getReforgeExperienceCost());
+                    }
 
-		if (Tiered.hasModifier(outputStack) && isValidHammer(materialItem)) {
-			ResourceLocation currentModifierId = outputStack.get(Tiered.MODIFIER);
-			if (currentModifierId != null) {
-				PotentialAttribute potential = Tiered.TIER_DATA.getTiers().get(currentModifierId);
-				if (potential != null) {
-					ResourceLocation newModifierId = currentModifierId;
-					int attempts = 0;
-					while ((newModifierId.equals(currentModifierId) || newModifierId.equals(ModifierUtils.BLANK)) && attempts < 5) {
-						newModifierId = ModifierUtils.getRandomAttributeIDFor(outputStack.getItem());
-						attempts++;
-					}
+                    this.broadcastChanges();
+                    ci.cancel();
+                }
+            }
+        } else {
+            tiered$cachedNextModifier = null;
+            tiered$lastInputItem = ItemStack.EMPTY;
+        }
+    }
 
-					if (!newModifierId.equals(ModifierUtils.BLANK)) {
-						outputStack.set(Tiered.MODIFIER, newModifierId);
-					}
+    @Inject(method = "onTake", at = @At("HEAD"), cancellable = true)
+    private void tiered$onTake(Player player, ItemStack outputStack, CallbackInfo ci) {
+        ItemStack materialItem = this.inputSlots.getItem(1);
+        ItemStack inputItem = this.inputSlots.getItem(0);
 
-					this.inputSlots.setItem(0, ItemStack.EMPTY);
+        if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
+            if (tiered$cachedNextModifier != null) {
+                PotentialAttribute nextPotential = Tiered.TIER_DATA.getTiers().get(tiered$cachedNextModifier);
+                if (nextPotential != null) {
+                    outputStack.set(Tiered.MODIFIER, tiered$cachedNextModifier);
 
-					int durabilityCost = potential.getReforgeDurabilityCost();
+                    this.inputSlots.setItem(0, ItemStack.EMPTY);
 
-					if (materialItem.isDamageableItem()) {
-						if ((materialItem.getMaxDamage() - materialItem.getDamageValue()) <= durabilityCost) {
-							materialItem.shrink(1);
-						} else {
-							materialItem.setDamageValue(materialItem.getDamageValue() + durabilityCost);
-						}
-					} else {
-						materialItem.shrink(1);
-					}
+                    int durabilityCost = nextPotential.getReforgeDurabilityCost();
 
-					this.inputSlots.setItem(1, materialItem);
+                    if (materialItem.isDamageableItem()) {
+                        if ((materialItem.getMaxDamage() - materialItem.getDamageValue()) <= durabilityCost) {
+                            materialItem.shrink(1);
+                        } else {
+                            materialItem.setDamageValue(materialItem.getDamageValue() + durabilityCost);
+                        }
+                    } else {
+                        materialItem.shrink(1);
+                    }
 
-					int expCost = (int) potential.getReforgeExperienceCost();
-					if (!player.getAbilities().instabuild && expCost > 0) {
-						player.giveExperienceLevels(-expCost);
-					}
+                    this.inputSlots.setItem(1, materialItem);
 
-					if (this.cost != null) {
-						this.cost.set(0);
-					}
+                    int expCost = (int) nextPotential.getReforgeExperienceCost();
+                    if (!player.getAbilities().instabuild && expCost > 0) {
+                        player.giveExperienceLevels(-expCost);
+                    }
 
-					this.broadcastChanges();
-					ci.cancel();
-				}
-			}
-		}
-	}
+                    if (this.cost != null) {
+                        this.cost.set(0);
+                    }
 
-	private boolean isValidHammer(ItemStack hammerItem) {
-		return hammerItem.is(Tiered.SMITHING_HAMMER);
-	}
+                    tiered$cachedNextModifier = null;
+                    tiered$lastInputItem = ItemStack.EMPTY;
+
+                    this.broadcastChanges();
+                    ci.cancel();
+                }
+            }
+        }
+    }
+
+    @Unique
+    private boolean isValidHammer(ItemStack hammerItem) {
+        return hammerItem.is(Tiered.SMITHING_HAMMER);
+    }
 }

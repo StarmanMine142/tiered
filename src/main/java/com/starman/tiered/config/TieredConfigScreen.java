@@ -12,6 +12,8 @@ public class TieredConfigScreen {
 				.setParentScreen(parent)
 				.setTitle(Component.translatable("gui.tiered.config"));
 
+		builder.setSavingRunnable(TieredConfig::save);
+
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		ConfigCategory general = builder.getOrCreateCategory(Component.translatable("config.tiered.category.general"));
 

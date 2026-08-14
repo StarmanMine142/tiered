@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.starman.tiered.api.TieredAttributes;
+import com.starman.tiered.config.TieredConfig;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -16,7 +17,6 @@ import net.minecraft.world.item.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Maps;
 import com.starman.tiered.api.AttributeTemplate;
 import com.starman.tiered.api.ModifierUtils;
 import com.starman.tiered.api.PotentialAttribute;
@@ -27,7 +27,6 @@ import com.starman.tiered.network.protocol.game.ClientboundTierSyncerPacket;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -92,6 +91,8 @@ public class Tiered implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        TieredConfig.load();
+
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(TIER_DATA);
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(POOL_DATA);
 

@@ -38,6 +38,5 @@
   "suggests": {
     "cloth-config": "*",
     "modmenu": "*"
-  },
-  "accessWidener": "${mod_id}.accesswidener"
+  }
 }

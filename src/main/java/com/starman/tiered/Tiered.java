@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.starman.tiered.api.TieredAttributes;
-import com.starman.tiered.config.TieredConfig;
+import com.starman.tiered.config.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -92,6 +92,7 @@ public class Tiered implements ModInitializer {
     @Override
     public void onInitialize() {
         TieredConfig.load();
+        TieredConfigSelector.load();
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(TIER_DATA);
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(POOL_DATA);

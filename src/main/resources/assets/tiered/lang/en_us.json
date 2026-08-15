@@ -48,6 +48,7 @@
 	"tier.tiered.spears.blunt": "Blunt",
 	"tier.tiered.spears.top_heavy": "Top Heavy",
 	"tier.tiered.spears.anchoring": "Anchoring",
+	"tier.tiered.spears.lunging": "Lunging",
 
 	"item.tiered.smithing_hammer": "Smithing Hammer",
 
@@ -63,6 +64,14 @@
 	"config.tiered.category.general": "General",
 	"config.tiered.enable_reforge_experience_cost": "Experience cost for reforging",
 	"config.tiered.enable_reforge_experience_cost.comment": "If enabled, experience will be consumed during reforging.",
+	"config.tiered.selector_mode": "Config Screen",
+	"config.tiered.selector_mode.tooltip": "Api, used for config screen.",
+	"gui.tiered.selector.title": "Select Config Screen",
+	"config.tiered.type.cloth": "Cloth Config",
+	"config.tiered.type.yacl": "YetAnotherConfigLib",
+	"config.tiered.type.vanilla": "Vanilla",
+	"config.tiered.type.none": "Selection",
+	"config.tiered.tooltip.mod_required": "Required mod is not installed: %s",
 
 	"modmenu.descriptionTranslation.tiered": "Adds tiers to tools.",
 	"fml.menu.mods.info.description.tiered": "Adds tiers to tools."

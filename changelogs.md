@@ -7,4 +7,4 @@
 - Added craft for hammer
 - Hammer uses `handled` parent model
 - Added Ukrainian
--
+- Config now uses 3 style of screen, and you can swith

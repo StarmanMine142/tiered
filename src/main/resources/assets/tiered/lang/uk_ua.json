@@ -48,6 +48,7 @@
 	"tier.tiered.spears.blunt": "Тупий",
 	"tier.tiered.spears.top_heavy": "Важкий на кінці",
 	"tier.tiered.spears.anchoring": "Зафіксований",
+	"tier.tiered.spears.lunging": "Випадний",
 
 	"item.tiered.smithing_hammer": "Ковальський молот",
 
@@ -61,8 +62,16 @@
 
 	"gui.tiered.config": "Налаштування Tiered",
 	"config.tiered.category.general": "Загальні",
-	"config.tiered.enable_reforge_experience_cost": "Витрата досвіду при перековування",
-	"config.tiered.enable_reforge_experience_cost.comment": "Якщо ввімкнено, перековування будь-якого предмета втрачатиме досвід.",
+	"config.tiered.enable_reforge_experience_cost": "Витрата досвіду при перековуванні",
+	"config.tiered.enable_reforge_experience_cost.comment": "Якщо ввімкнено, перековування будь-якого предмета витрачатиме досвід.",
+	"config.tiered.selector_mode": "Екран налаштувань",
+	"config.tiered.selector_mode.tooltip": "Бібліотека, використана для екрана налаштувань.",
+	"gui.tiered.selector.title": "Вибрати екран налаштувань",
+	"config.tiered.type.cloth": "Cloth Config",
+	"config.tiered.type.yacl": "YetAnotherConfigLib",
+	"config.tiered.type.vanilla": "Стандартний",
+	"config.tiered.type.none": "Вибір",
+	"config.tiered.tooltip.mod_required": "Потрібний мод не встановлено: %s",
 
 	"modmenu.descriptionTranslation.tiered": "Додає посилення для інструментів і зброї.",
 	"fml.menu.mods.info.description.tiered": "Додає посилення для інструментів і зброї."

@@ -92,7 +92,6 @@ public class Tiered implements ModInitializer {
     @Override
     public void onInitialize() {
         TieredConfig.load();
-        TieredConfigSelector.load();
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(TIER_DATA);
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(POOL_DATA);

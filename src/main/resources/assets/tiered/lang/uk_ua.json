@@ -1,10 +1,10 @@
 {
-	"tier.tiered.armors.dented": "Надламаний|Надламані",
-	"tier.tiered.armors.fortified": "Укріплений|Укріплені",
-	"tier.tiered.armors.heavy": "Важкий|Важкі",
-	"tier.tiered.armors.reinforced": "Посилений|Посилені",
-	"tier.tiered.armors.resilient": "Пружний|Пружні",
-	"tier.tiered.armors.unchained": "Розкутий|Розкуті",
+	"tier.tiered.armors.dented": "Надламаний|Надламана|Надламані",
+	"tier.tiered.armors.fortified": "Укріплений|Укріплена|Укріплені",
+	"tier.tiered.armors.heavy": "Важкий|Важка|Важкі",
+	"tier.tiered.armors.reinforced": "Посилений|Посилена|Посилені",
+	"tier.tiered.armors.resilient": "Пружний|Пружна|Пружні",
+	"tier.tiered.armors.unchained": "Розкутий|Розкута|Розкуті",
 	"tier.tiered.bows.clumsy": "Незграбний",
 	"tier.tiered.bows.elastic": "Еластичний",
 	"tier.tiered.bows.epic": "Епічний",
@@ -31,10 +31,10 @@
 	"tier.tiered.shields.reinforced": "Посилений",
 	"tier.tiered.shields.resilient": "Пружний",
 	"tier.tiered.shields.unchained": "Розкутий",
-	"tier.tiered.standard_armors.common": "Звичайний|Звичайні",
-	"tier.tiered.standard_armors.epic": "Епічний|Епічні",
-	"tier.tiered.standard_armors.legendary": "Легендарний|Легендарні",
-	"tier.tiered.standard_armors.rare": "Рідкісний|Рідкісні",
+	"tier.tiered.standard_armors.common": "Звичайний|Звичайна|Звичайні",
+	"tier.tiered.standard_armors.epic": "Епічний|Епічна|Епічні",
+	"tier.tiered.standard_armors.legendary": "Легендарний|Легендарна|Легендарні",
+	"tier.tiered.standard_armors.rare": "Рідкісний|Рідкісна|Рідкісні",
 	"tier.tiered.standard_tools.common": "Звичайний|Звичайна|Звичайне",
 	"tier.tiered.standard_tools.epic": "Епічний|Епічна|Епічне",
 	"tier.tiered.standard_tools.legendary": "Легендарний|Легендарна|Легендарне",
@@ -45,10 +45,11 @@
 	"tier.tiered.spears.piercing": "Пробивний",
 	"tier.tiered.spears.forceful": "Посилений",
 	"tier.tiered.spears.wobbly": "Хиткий",
-	"tier.tiered.spears.blunt": "Тупий",
+	"tier.tiered.spears.blunt": "Затуплений",
 	"tier.tiered.spears.top_heavy": "Важкий на кінці",
 	"tier.tiered.spears.anchoring": "Зафіксований",
 	"tier.tiered.spears.lunging": "Випадний",
+	"tier.tiered.spears.devastator": "Руйнівний",
 
 	"item.tiered.smithing_hammer": "Ковальський молот",
 
@@ -73,6 +74,6 @@
 	"config.tiered.type.none": "Вибір",
 	"config.tiered.tooltip.mod_required": "Потрібний мод не встановлено: %s",
 
-	"modmenu.descriptionTranslation.tiered": "Додає посилення для інструментів і зброї.",
-	"fml.menu.mods.info.description.tiered": "Додає посилення для інструментів і зброї."
+	"modmenu.descriptionTranslation.tiered": "Додає посилення для спорядження.",
+	"fml.menu.mods.info.description.tiered": "Додає посилення для спорядження."
 }

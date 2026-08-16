@@ -2,36 +2,25 @@
   {
     "index": 0,
     "items": [
-      "minecraft:netherite_helmet",
-      "minecraft:diamond_helmet",
-      "minecraft:gold_helmet",
-      "minecraft:iron_helmet",
-      "minecraft:chainmail_helmet",
-      "minecraft:leather_helmet",
-      "minecraft:netherite_chestplate",
-      "minecraft:diamond_chestplate",
-      "minecraft:gold_chestplate",
-      "minecraft:iron_chestplate",
-      "minecraft:chainmail_chestplate",
-      "minecraft:leather_chestplate",
-      "minecraft:shield"
+      "#minecraft:head_armor",
+      "#minecraft:chest_armor",
+      "#c:shields",
+      "-minecraft:leather_helmet",
+      "-minecraft:leather_chestplate"
     ]
   },
   {
     "index": 1,
     "items": [
-      "minecraft:netherite_leggings",
-      "minecraft:diamond_leggings",
-      "minecraft:gold_leggings",
-      "minecraft:iron_leggings",
-      "minecraft:chainmail_leggings",
-      "minecraft:leather_leggings",
-      "minecraft:netherite_boots",
-      "minecraft:diamond_boots",
-      "minecraft:gold_boots",
-      "minecraft:iron_boots",
-      "minecraft:chainmail_boots",
-      "minecraft:leather_boots"
+      "minecraft:leather_helmet",
+      "minecraft:leather_chestplate"
+    ]
+  },
+  {
+    "index": 2,
+    "items": [
+      "#minecraft:leg_armor",
+      "#minecraft:foot_armor"
     ]
   }
 ]

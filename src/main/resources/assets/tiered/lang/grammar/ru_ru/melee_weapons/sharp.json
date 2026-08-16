@@ -1,0 +1,26 @@
+[
+  {
+    "index": 0,
+    "items": [
+      "#minecraft:swords",
+      "#minecraft:axes"
+    ]
+  },
+  {
+    "index": 1,
+    "items": [
+      "#c:tools/mace"
+    ]
+  },
+  {
+    "index": 2,
+    "items": [
+      "minecraft:netherite_spear",
+      "minecraft:diamond_spear",
+      "minecraft:golden_spear",
+      "minecraft:iron_spear",
+      "minecraft:stone_spear",
+      "minecraft:wooden_spear"
+    ]
+  }
+]

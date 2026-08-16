@@ -7,19 +7,53 @@ import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TierGrammarManager implements SimpleSynchronousResourceReloadListener {
-    private static final Map<String, Map<ResourceLocation, Map<Item, Integer>>> LOCALIZED_GRAMMAR_MAP = new HashMap<>();
+
+    public static class GrammarEntry {
+        private final int index;
+        private final Set<Item> items = new HashSet<>();
+        private final Set<TagKey<Item>> tags = new HashSet<>();
+        private final Set<Item> excludedItems = new HashSet<>();
+        private final Set<TagKey<Item>> excludedTags = new HashSet<>();
+
+        public GrammarEntry(int index) {
+            this.index = index;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public boolean matches(Item item) {
+            ItemStack stack = new ItemStack(item);
+
+            if (excludedItems.contains(item)) return false;
+            for (TagKey<Item> tag : excludedTags) {
+                if (stack.is(tag)) return false;
+            }
+
+            if (items.contains(item)) return true;
+            for (TagKey<Item> tag : tags) {
+                if (stack.is(tag)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    private static final Map<String, Map<ResourceLocation, List<GrammarEntry>>> LOCALIZED_GRAMMAR_MAP = new HashMap<>();
     private static final Set<String> LOWERCASE_LOCALES = new HashSet<>();
     private static final Gson GSON = new Gson();
 
@@ -68,23 +102,51 @@ public class TierGrammarManager implements SimpleSynchronousResourceReloadListen
 
                     try (InputStreamReader reader = new InputStreamReader(resource.open(), StandardCharsets.UTF_8)) {
                         JsonArray array = GSON.fromJson(reader, JsonArray.class);
-                        Map<Item, Integer> itemIndexMap = new HashMap<>();
+                        List<GrammarEntry> grammarEntries = new ArrayList<>();
 
                         if (array != null) {
+                            int autoIndex = 0;
                             for (JsonElement element : array) {
                                 if (element.isJsonObject()) {
                                     JsonObject obj = element.getAsJsonObject();
-                                    int index = obj.get("index").getAsInt();
+
+                                    int index;
+                                    if (obj.has("index")) {
+                                        index = obj.get("index").getAsInt();
+                                        autoIndex = index;
+                                    } else {
+                                        index = autoIndex;
+                                    }
+
                                     JsonArray itemsArray = obj.getAsJsonArray("items");
+
+                                    GrammarEntry entry = new GrammarEntry(index);
 
                                     if (itemsArray != null) {
                                         for (JsonElement itemElem : itemsArray) {
-                                            ResourceLocation itemId = ResourceLocation.parse(itemElem.getAsString());
-                                            if (BuiltInRegistries.ITEM.containsKey(itemId)) {
-                                                Item item = BuiltInRegistries.ITEM.get(itemId);
-                                                itemIndexMap.put(item, index);
+                                            String rawVal = itemElem.getAsString();
+                                            boolean isExcluded = rawVal.startsWith("-");
+                                            String idOrTag = isExcluded ? rawVal.substring(1) : rawVal;
+
+                                            if (idOrTag.startsWith("#")) {
+                                                ResourceLocation tagLocation = ResourceLocation.parse(idOrTag.substring(1));
+                                                TagKey<Item> itemTag = TagKey.create(Registries.ITEM, tagLocation);
+                                                if (isExcluded) entry.excludedTags.add(itemTag);
+                                                else entry.tags.add(itemTag);
+                                            } else {
+                                                ResourceLocation itemId = ResourceLocation.parse(idOrTag);
+                                                if (BuiltInRegistries.ITEM.containsKey(itemId)) {
+                                                    Item item = BuiltInRegistries.ITEM.get(itemId);
+                                                    if (isExcluded) entry.excludedItems.add(item);
+                                                    else entry.items.add(item);
+                                                }
                                             }
                                         }
+                                    }
+                                    grammarEntries.add(entry);
+
+                                    if (!obj.has("index")) {
+                                        autoIndex++;
                                     }
                                 }
                             }
@@ -92,7 +154,7 @@ public class TierGrammarManager implements SimpleSynchronousResourceReloadListen
 
                         LOCALIZED_GRAMMAR_MAP
                                 .computeIfAbsent(locale, k -> new HashMap<>())
-                                .put(tierId, itemIndexMap);
+                                .put(tierId, grammarEntries);
                     }
                 }
             } catch (Exception e) {
@@ -110,7 +172,7 @@ public class TierGrammarManager implements SimpleSynchronousResourceReloadListen
 
     public static int getIndexFor(ResourceLocation tierId, Item item) {
         String currentLocale = getCurrentLocale();
-        Map<Item, Integer> itemMap = null;
+        List<GrammarEntry> entries = null;
 
         String[] possibleLocales = {
                 currentLocale,
@@ -120,39 +182,43 @@ public class TierGrammarManager implements SimpleSynchronousResourceReloadListen
         };
 
         for (String locale : possibleLocales) {
-            Map<ResourceLocation, Map<Item, Integer>> tierMap = LOCALIZED_GRAMMAR_MAP.get(locale);
+            Map<ResourceLocation, List<GrammarEntry>> tierMap = LOCALIZED_GRAMMAR_MAP.get(locale);
             if (tierMap != null) {
-                itemMap = tierMap.get(tierId);
-                if (itemMap == null) {
-                    for (Map.Entry<ResourceLocation, Map<Item, Integer>> entry : tierMap.entrySet()) {
+                entries = tierMap.get(tierId);
+                if (entries == null) {
+                    for (Map.Entry<ResourceLocation, List<GrammarEntry>> entry : tierMap.entrySet()) {
                         ResourceLocation regId = entry.getKey();
                         if (regId.getPath().equals(tierId.getPath()) ||
                                 regId.getPath().endsWith("/" + tierId.getPath())) {
-                            itemMap = entry.getValue();
+                            entries = entry.getValue();
                             break;
                         }
                     }
                 }
-                if (itemMap != null) break;
+                if (entries != null) break;
             }
         }
 
-        if (itemMap == null) {
-            for (Map<ResourceLocation, Map<Item, Integer>> tierMap : LOCALIZED_GRAMMAR_MAP.values()) {
-                for (Map.Entry<ResourceLocation, Map<Item, Integer>> entry : tierMap.entrySet()) {
+        if (entries == null) {
+            for (Map<ResourceLocation, List<GrammarEntry>> tierMap : LOCALIZED_GRAMMAR_MAP.values()) {
+                for (Map.Entry<ResourceLocation, List<GrammarEntry>> entry : tierMap.entrySet()) {
                     ResourceLocation regId = entry.getKey();
                     if (regId.getPath().equals(tierId.getPath()) ||
                             regId.getPath().endsWith("/" + tierId.getPath())) {
-                        itemMap = entry.getValue();
+                        entries = entry.getValue();
                         break;
                     }
                 }
-                if (itemMap != null) break;
+                if (entries != null) break;
             }
         }
 
-        if (itemMap != null && itemMap.containsKey(item)) {
-            return itemMap.get(item);
+        if (entries != null) {
+            for (GrammarEntry entry : entries) {
+                if (entry.matches(item)) {
+                    return entry.getIndex();
+                }
+            }
         }
 
         return 0;

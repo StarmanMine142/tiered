@@ -1,0 +1,24 @@
+[
+  {
+    "index": 0,
+    "items": [
+      "#minecraft:head_armor",
+      "#minecraft:chest_armor",
+      "#c:shields",
+      "-minecraft:leather_chestplate"
+    ]
+  },
+  {
+    "index": 1,
+    "items": [
+      "minecraft:leather_chestplate"
+    ]
+  },
+  {
+    "index": 2,
+    "items": [
+      "#minecraft:leg_armor",
+      "#minecraft:foot_armor"
+    ]
+  }
+]

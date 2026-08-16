@@ -36,6 +36,45 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 
 public class Tiered implements ModInitializer {
 
+    public static final Logger LOGGER = LogManager.getLogger();
+    public static final String ID = "tiered";
+    public static Tiered instance;
+
+    @Override
+    public void onInitialize() {
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(server -> {
+            for (net.minecraft.server.level.ServerPlayer player : server.getPlayerList().getPlayers()) {
+                if (player.tickCount % 10 == 0) {
+                    for (ItemStack stack : player.containerMenu.getItems()) {
+                        if (!stack.isEmpty()) {
+                            Tiered.attemptToAffixTier(stack);
+                        }
+                    }
+                }
+            }
+        });
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            if (handler.player.level().isClientSide) return;
+            ServerPlayNetworking.send(handler.player, new ClientboundTierSyncerPacket(TIER_DATA.getTiers()));
+        });
+
+        TieredConfig.load();
+
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(TIER_DATA);
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(POOL_DATA);
+
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(content -> {
+            content.addAfter(Items.BRUSH, SMITHING_HAMMER);
+        });
+
+        TieredAttributes.registerAttributes();
+
+        instance = this;
+
+        PayloadTypeRegistry.playS2C().register(ClientboundTierSyncerPacket.TYPE, ClientboundTierSyncerPacket.STREAM_CODEC);
+    }
+
     public static final TierDataLoader TIER_DATA = new TierDataLoader();
     public static final PoolDataLoader POOL_DATA = new PoolDataLoader();
 
@@ -70,13 +109,9 @@ public class Tiered implements ModInitializer {
             ResourceLocation.fromNamespaceAndPath("tiered", "rings")
     };
 
-    public static final Logger LOGGER = LogManager.getLogger();
-    public static final String ID = "tiered";
-    public static Tiered instance;
-
     public static final DataComponentType<ResourceLocation> MODIFIER = Registry.register(
             BuiltInRegistries.DATA_COMPONENT_TYPE,
-            ResourceLocation.fromNamespaceAndPath(ID, "reforged_modifier"),
+            ResourceLocation.fromNamespaceAndPath(ID, "tiered_modifier"),
             DataComponentType.<ResourceLocation>builder()
                     .persistent(ResourceLocation.CODEC)
                     .networkSynchronized(ResourceLocation.STREAM_CODEC)
@@ -89,53 +124,14 @@ public class Tiered implements ModInitializer {
         return Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(ID, name), item);
     }
 
-    @Override
-    public void onInitialize() {
-        TieredConfig.load();
-
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(TIER_DATA);
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(POOL_DATA);
-
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(content -> {
-            content.addAfter(Items.BRUSH, SMITHING_HAMMER);
-        });
-
-        net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(server -> {
-            for (net.minecraft.server.level.ServerPlayer player : server.getPlayerList().getPlayers()) {
-                if (player.tickCount % 20 == 0) {
-                    for (ItemStack stack : player.getInventory().items) {
-                        attemptToAffixTier(stack);
-                    }
-                }
-            }
-        });
-
-        TieredAttributes.registerAttributes();
-
-        instance = this;
-
-        PayloadTypeRegistry.playS2C().register(ClientboundTierSyncerPacket.TYPE, ClientboundTierSyncerPacket.STREAM_CODEC);
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            if (handler.player.level().isClientSide) return;
-            ServerPlayNetworking.send(handler.player, new ClientboundTierSyncerPacket(TIER_DATA.getTiers()));
-        });
-    }
-
     public static ResourceLocation getTier(ItemStack stack) {
-        ResourceLocation id = stack.get(MODIFIER);
-        if (id == null) return null;
-
-        if ("reforged".equals(id.getNamespace())) {
-            ResourceLocation fixed = ResourceLocation.fromNamespaceAndPath(ID, id.getPath());
-            stack.set(MODIFIER, fixed);
-            return fixed;
-        }
-        return id;
+        if (stack.isEmpty()) return null;
+        return stack.get(MODIFIER);
     }
 
     public static boolean hasModifier(ItemStack stack) {
         ResourceLocation tier = getTier(stack);
-        return tier != null && !tier.equals(ModifierUtils.BLANK);
+        return tier != null && !tier.equals(ModifierUtils.BLANK) && TIER_DATA.getTiers().containsKey(tier);
     }
 
     public static void attemptToAffixTier(ItemStack stack) {

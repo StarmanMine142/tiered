@@ -4,11 +4,9 @@
   "refmap": "tiered.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AbstractContainerMenuMixin",
     "AnvilMenuMixin",
     "BowItemMixin",
     "CrossbowItemMixin",
-    "ItemNbtMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerMixin",

@@ -49,6 +49,7 @@
 	"tier.tiered.spears.top_heavy": "Top Heavy",
 	"tier.tiered.spears.anchoring": "Anchoring",
 	"tier.tiered.spears.lunging": "Lunging",
+	"tier.tiered.spears.devastator": "Devastator",
 
 	"item.tiered.smithing_hammer": "Smithing Hammer",
 
@@ -73,6 +74,6 @@
 	"config.tiered.type.none": "Selection",
 	"config.tiered.tooltip.mod_required": "Required mod is not installed: %s",
 
-	"modmenu.descriptionTranslation.tiered": "Adds tiers to tools.",
-	"fml.menu.mods.info.description.tiered": "Adds tiers to tools."
+	"modmenu.descriptionTranslation.tiered": "Adds tiers to equipment.",
+	"fml.menu.mods.info.description.tiered": "Adds tiers to equipment."
 }

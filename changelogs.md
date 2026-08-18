@@ -9,3 +9,4 @@
 - Hammer uses `handled` parent model
 - Added Ukrainian
 - Added Russian
+- Bow Tiers now used for Crossbow 

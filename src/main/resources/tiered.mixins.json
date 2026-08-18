@@ -9,7 +9,6 @@
     "CrossbowItemMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
-    "PlayerMixin",
     "ServerPlayerEntityMixin"
   ],
   "client": [

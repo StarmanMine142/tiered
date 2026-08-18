@@ -1,26 +1,19 @@
 package com.starman.tiered.api;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import com.starman.tiered.Tiered;
+
+import java.util.*;
 import java.util.function.BiConsumer;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.starman.tiered.Tiered;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.*;
 
 public class AttributeTemplate {
 	public static final Codec<EquipmentSlotGroup> LENIENT_SLOT_GROUP_CODEC = Codec.STRING.xmap(
@@ -201,7 +194,7 @@ public class AttributeTemplate {
 				attributeModifier.operation()
 		);
 
-		Optional<Reference<Attribute>> key = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeTypeID));
+		Optional<Holder.Reference<Attribute>> key = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeTypeID));
 		if(key == null || key.isEmpty()) {
 			Tiered.LOGGER.warn(String.format("%s was referenced as an attribute type, but it does not exist! A data file in /tiered/item_attributes/ has an invalid type property.", attributeTypeID));
 		} else {
@@ -210,7 +203,7 @@ public class AttributeTemplate {
 	}
 
 	public boolean attributeExists(String keyChecked) {
-		Optional<Reference<Attribute>> key = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeTypeID));
+		Optional<Holder.Reference<Attribute>> key = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeTypeID));
 		if (key == null || key.isEmpty()) {
 			Tiered.LOGGER.warn(String.format("%s was referenced as an attribute type in %s, but it does not exist!", attributeTypeID, keyChecked));
 			return false;

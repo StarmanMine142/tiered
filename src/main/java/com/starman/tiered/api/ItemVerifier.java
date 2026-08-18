@@ -1,17 +1,16 @@
 package com.starman.tiered.api;
 
+import com.starman.tiered.Tiered;
+
 import java.util.Optional;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.starman.tiered.Tiered;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 
 public class ItemVerifier {
     public static final Codec<ItemVerifier> CODEC = RecordCodecBuilder.create(

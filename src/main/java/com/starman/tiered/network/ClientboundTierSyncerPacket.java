@@ -1,13 +1,12 @@
-package com.starman.tiered.network.protocol.game;
+package com.starman.tiered.network;
 
-import static com.starman.tiered.Tiered.TIER_DATA;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.common.collect.Maps;
+import com.starman.tiered.Tiered;
 import com.starman.tiered.api.PotentialAttribute;
 import com.starman.tiered.data.TierDataLoader;
+
+import java.util.*;
+
+import com.google.common.collect.Maps;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ClientboundTierSyncerPacket implements CustomPacketPayload {
 
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("tiered", "tier_sync");
+	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Tiered.ID, "tier_sync");
 	public static final CustomPacketPayload.Type<ClientboundTierSyncerPacket> TYPE = new CustomPacketPayload.Type<>(ID);
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundTierSyncerPacket> STREAM_CODEC = CustomPacketPayload.codec(
@@ -57,12 +56,12 @@ public class ClientboundTierSyncerPacket implements CustomPacketPayload {
 	}
 
 	public void handleOnClient() {
-		CACHED_ATTRIBUTES.putAll(TIER_DATA.getTiers());
-		TIER_DATA.clear();
+		CACHED_ATTRIBUTES.putAll(Tiered.TIER_DATA.getTiers());
+		Tiered.TIER_DATA.clear();
 
-		TIER_DATA.replace(this.attribute);
-		if (TIER_DATA.getTiers().size() == 0) {
-			TIER_DATA.replace(CACHED_ATTRIBUTES);
+		Tiered.TIER_DATA.replace(this.attribute);
+		if (Tiered.TIER_DATA.getTiers().size() == 0) {
+			Tiered.TIER_DATA.replace(CACHED_ATTRIBUTES);
 		}
 	}
 }

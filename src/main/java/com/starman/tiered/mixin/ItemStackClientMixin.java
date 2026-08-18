@@ -1,26 +1,21 @@
 package com.starman.tiered.mixin;
 
-import java.util.function.Consumer;
-
 import com.starman.tiered.Tiered;
 import com.starman.tiered.grammar.TierGrammarManager;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import com.starman.tiered.api.PotentialAttribute;
+import com.starman.tiered.util.TierHelper;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
+import java.util.function.Consumer;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.*;
+
+import net.minecraft.*;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentHolder;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.core.component.*;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +34,7 @@ public abstract class ItemStackClientMixin implements DataComponentHolder {
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/MutableComponent;withStyle(Lnet/minecraft/ChatFormatting;)Lnet/minecraft/network/chat/MutableComponent;", ordinal = 1), method = "addModifierTooltip")
     private MutableComponent getTextFormatting(MutableComponent translatableText, ChatFormatting formatting) {
-        if(Tiered.hasModifier((ItemStack)(Object)this) && isTiered) {
+        if(TierHelper.hasModifier((ItemStack)(Object)this) && isTiered) {
             ResourceLocation tier = ((ItemStack)(Object)this).get(Tiered.MODIFIER);
             PotentialAttribute attribute = Tiered.TIER_DATA.getTiers().get(tier);
 
@@ -56,7 +51,7 @@ public abstract class ItemStackClientMixin implements DataComponentHolder {
     )
     private void modifyName(CallbackInfoReturnable<Component> cir) {
         ItemStack stack = (ItemStack)(Object)this;
-        if(this.get(DataComponents.CUSTOM_NAME) == null && Tiered.hasModifier(stack)) {
+        if(this.get(DataComponents.CUSTOM_NAME) == null && TierHelper.hasModifier(stack)) {
             ResourceLocation tier = stack.get(Tiered.MODIFIER);
 
             PotentialAttribute potentialAttribute = Tiered.TIER_DATA.getTiers().get(tier);
@@ -66,7 +61,7 @@ public abstract class ItemStackClientMixin implements DataComponentHolder {
                 if (potentialAttribute.getLiteralName() != null) {
                     title = Component.literal(potentialAttribute.getLiteralName());
                 } else {
-                    String descriptionId = Util.makeDescriptionId("tier", Tiered.getKey(potentialAttribute));
+                    String descriptionId = Util.makeDescriptionId("tier", TierHelper.getKey(potentialAttribute));
 
                     String rawTranslation = I18n.exists(descriptionId) ? I18n.get(descriptionId) : descriptionId;
 

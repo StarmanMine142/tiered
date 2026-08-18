@@ -1,31 +1,22 @@
 package com.starman.tiered.mixin;
 
 import com.starman.tiered.Tiered;
-import com.starman.tiered.api.ModifierUtils;
-import com.starman.tiered.api.PotentialAttribute;
+import com.starman.tiered.api.*;
 import com.starman.tiered.config.TieredConfig;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
+import com.starman.tiered.item.TieredItems;
+
+import com.starman.tiered.util.TierHelper;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.*;
+
+import net.minecraft.core.particles.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AnvilMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.DataSlot;
-import net.minecraft.world.inventory.ItemCombinerMenu;
-import net.minecraft.world.inventory.MenuType;
+import net.minecraft.sounds.*;
+import net.minecraft.world.entity.player.*;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AnvilMenu.class)
 public abstract class AnvilMenuMixin extends ItemCombinerMenu {
@@ -44,7 +35,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack inputItem = this.inputSlots.getItem(0);
         ItemStack materialItem = this.inputSlots.getItem(1);
 
-        if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
+        if (TierHelper.hasModifier(inputItem) && isValidHammer(materialItem)) {
             if (!TieredConfig.enableReforgeExpCost || player.getAbilities().instabuild || player.experienceLevel >= getExpCost(inputItem)) {
                 cir.setReturnValue(true);
             } else {
@@ -58,7 +49,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack inputItem = this.inputSlots.getItem(0);
         ItemStack materialItem = this.inputSlots.getItem(1);
 
-        if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
+        if (TierHelper.hasModifier(inputItem) && isValidHammer(materialItem)) {
             ResourceLocation currentModifierId = inputItem.get(Tiered.MODIFIER);
             if (currentModifierId != null) {
 
@@ -82,7 +73,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 
                     this.resultSlots.setItem(0, result);
 
-                    int expCost = TieredConfig.enableReforgeExpCost ? (int) nextPotential.getReforgeExperienceCost() : 0;
+                    int expCost = TieredConfig.enableReforgeExpCost ? nextPotential.getReforgeExperienceCost() : 0;
                     if (this.cost != null) {
                         this.cost.set(expCost);
                     }
@@ -99,7 +90,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack materialItem = this.inputSlots.getItem(1);
         ItemStack inputItem = this.inputSlots.getItem(0);
 
-        if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
+        if (TierHelper.hasModifier(inputItem) && isValidHammer(materialItem)) {
             ResourceLocation pendingModifier = getPendingModifier(inputItem);
 
             if (pendingModifier != null) {
@@ -165,7 +156,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 
     @Unique
     private boolean isValidHammer(ItemStack hammerItem) {
-        return hammerItem.is(Tiered.SMITHING_HAMMER);
+        return hammerItem.is(TieredItems.SMITHING_HAMMER);
     }
 
     @Unique

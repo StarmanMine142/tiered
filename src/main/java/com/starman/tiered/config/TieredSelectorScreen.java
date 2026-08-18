@@ -1,10 +1,11 @@
 package com.starman.tiered.config;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.fabricmc.loader.api.FabricLoader;
 
 public class TieredSelectorScreen extends Screen {
     private final Screen parent;

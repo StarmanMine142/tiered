@@ -1,9 +1,10 @@
 package com.starman.tiered.config;
 
-import dev.isxander.yacl3.api.*;
-import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
+
+import dev.isxander.yacl3.api.*;
+import dev.isxander.yacl3.api.controller.*;
+
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 

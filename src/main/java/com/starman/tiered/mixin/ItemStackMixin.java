@@ -1,25 +1,20 @@
 package com.starman.tiered.mixin;
 
-import com.starman.tiered.Tiered;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.starman.tiered.item.TieredItems;
+import com.starman.tiered.util.TierHelper;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
+
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.*;
+
+import net.minecraft.core.*;
+import net.minecraft.nbt.*;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.item.ItemStack;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
@@ -41,7 +36,7 @@ public abstract class ItemStackMixin {
 			ItemStack stack = optionalStack.get();
 			if (tag instanceof CompoundTag compoundTag && compoundTag.contains("id")) {
 				if (LEGACY_HAMMERS.contains(compoundTag.getString("id"))) {
-					cir.setReturnValue(Optional.of(new ItemStack(Tiered.SMITHING_HAMMER, stack.getCount())));
+					cir.setReturnValue(Optional.of(new ItemStack(TieredItems.SMITHING_HAMMER, stack.getCount())));
 				}
 			}
 		}
@@ -74,7 +69,7 @@ public abstract class ItemStackMixin {
 	@Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V", at = @At("TAIL"))
 	private void tiered$appendAttributes(EquipmentSlotGroup slot, BiConsumer<Holder<Attribute>, AttributeModifier> pAction, CallbackInfo ci) {
 		ItemStack thisStack = (ItemStack)(Object)this;
-		Tiered.AppendAttributesToOriginal(thisStack, slot, Tiered.isPreferredEquipmentSlot(thisStack, slot), "AttributeModifiers",
+		TierHelper.AppendAttributesToOriginal(thisStack, slot, TierHelper.isPreferredEquipmentSlot(thisStack, slot), "AttributeModifiers",
 				template -> template.getRequiredEquipmentSlot(),
 				template -> template.getOptionalEquipmentSlot(),
 				(template) -> template.realize(pAction, slot));

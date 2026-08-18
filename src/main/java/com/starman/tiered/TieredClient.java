@@ -2,15 +2,16 @@ package com.starman.tiered;
 
 import com.starman.tiered.api.TieredAttributes;
 import com.starman.tiered.grammar.TierGrammarManager;
-import com.starman.tiered.network.protocol.game.ClientboundTierSyncerPacket;
+import com.starman.tiered.network.ClientboundTierSyncerPacket;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 
 public class TieredClient implements ClientModInitializer {
 

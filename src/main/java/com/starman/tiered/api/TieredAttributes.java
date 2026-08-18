@@ -1,11 +1,10 @@
 package com.starman.tiered.api;
 
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import com.starman.tiered.Tiered;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import net.minecraft.world.entity.ai.attributes.*;
 
 public class TieredAttributes {
 
@@ -19,11 +18,11 @@ public class TieredAttributes {
     private static Holder<Attribute> register(String name, double defaultValue, double min, double max) {
         return Registry.registerForHolder(
                 BuiltInRegistries.ATTRIBUTE,
-                ResourceLocation.fromNamespaceAndPath("tiered", name),
+                ResourceLocation.fromNamespaceAndPath(Tiered.ID, name),
                 new RangedAttribute("attribute.name." + name, defaultValue, min, max).setSyncable(true)
         );
     }
 
-    public static void registerAttributes() {
+    public static void register() {
     }
 }

@@ -1,16 +1,12 @@
 package com.starman.tiered.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screens.Screen;
+import java.io.*;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.google.gson.*;
+
+import net.fabricmc.loader.api.FabricLoader;
+
+import net.minecraft.client.gui.screens.Screen;
 
 public class TieredConfig {
 	public static boolean enableReforgeExpCost = true;

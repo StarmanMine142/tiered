@@ -1,12 +1,10 @@
 package com.starman.tiered.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.function.Predicate;
-
 import com.starman.tiered.Tiered;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +12,7 @@ import net.minecraft.world.item.Item;
 
 public class ModifierUtils {
 
-	public static final ResourceLocation BLANK = ResourceLocation.fromNamespaceAndPath("tiered", "blank");
+	public static final ResourceLocation BLANK = ResourceLocation.fromNamespaceAndPath(Tiered.ID, "blank");
 
 	public static ResourceLocation getRandomAttributeIDFor(Item item) {
 		ResourceLocation itemKey = BuiltInRegistries.ITEM.getKey(item);

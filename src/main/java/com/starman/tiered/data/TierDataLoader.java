@@ -1,30 +1,21 @@
 package com.starman.tiered.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.starman.tiered.Tiered;
+import com.starman.tiered.api.*;
+import com.starman.tiered.gson.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.*;
 
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.starman.tiered.api.AttributeTemplate;
-import com.starman.tiered.api.PotentialAttribute;
-import com.starman.tiered.gson.EntityAttributeModifierDeserializer;
-import com.starman.tiered.gson.EntityAttributeModifierSerializer;
-import com.starman.tiered.gson.EquipmentSlotDeserializer;
-import com.starman.tiered.gson.StyleSerializer;
+import com.google.gson.*;
+
+import org.apache.logging.log4j.*;
 
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.server.packs.resources.*;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -90,6 +81,6 @@ public class TierDataLoader extends SimpleJsonResourceReloadListener implements 
 
     @Override
     public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath("tiered", "data_loader");
+        return ResourceLocation.fromNamespaceAndPath(Tiered.ID, "data_loader");
     }
 }

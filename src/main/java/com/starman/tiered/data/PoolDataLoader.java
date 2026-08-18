@@ -1,22 +1,19 @@
 package com.starman.tiered.data;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.starman.tiered.Tiered;
 import com.starman.tiered.api.TierPool;
 
+import java.util.*;
+
+import com.google.common.collect.Maps;
+import com.google.gson.*;
+
+import org.apache.logging.log4j.*;
+
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.server.packs.resources.*;
 import net.minecraft.util.profiling.ProfilerFiller;
 
 public class PoolDataLoader extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
@@ -68,6 +65,6 @@ public class PoolDataLoader extends SimpleJsonResourceReloadListener implements 
 
     @Override
     public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath("tiered", "pool_data");
+        return ResourceLocation.fromNamespaceAndPath(Tiered.ID, "pool_data");
     }
 }

@@ -1,7 +1,6 @@
 package com.starman.tiered.config;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
+import com.terraformersmc.modmenu.api.*;
 
 public class ModMenuIntegration implements ModMenuApi {
 	@Override

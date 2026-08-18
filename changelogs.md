@@ -1,12 +1,12 @@
 # 1.0.0
 - Removed using [Unionlib](https://modrinth.com/mod/unionlib)
-- Config now uses 3 style of screen, and you can swith
+- Config now uses 3 style of screen, and you can switch
 - Added (or fixed?) reforging
 - Added Tier grammar for langs
-- Items name in langs, what in `lowercase_langs.json` alweys written with lowercase
+- Items name in langs, what in `lowercase_langs.json` alweys written with lowercase after tier name
 - 3 hammers replaced with 1 universal hammer
 - Added craft for hammer
 - Hammer uses `handled` parent model
 - Added Ukrainian
 - Added Russian
-- Bow Tiers now used for Crossbow 
+- Bow's tiers now used for Crossbow 

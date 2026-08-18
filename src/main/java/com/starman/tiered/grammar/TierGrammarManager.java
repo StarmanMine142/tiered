@@ -1,22 +1,20 @@
 package com.starman.tiered.grammar;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import com.google.gson.*;
+
+import com.starman.tiered.Tiered;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.*;
 
 public class TierGrammarManager implements SimpleSynchronousResourceReloadListener {
 
@@ -59,7 +57,7 @@ public class TierGrammarManager implements SimpleSynchronousResourceReloadListen
 
     @Override
     public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath("tiered", "grammar_manager");
+        return ResourceLocation.fromNamespaceAndPath(Tiered.ID, "grammar_manager");
     }
 
     @Override

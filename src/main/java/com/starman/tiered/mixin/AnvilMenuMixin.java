@@ -18,6 +18,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.ItemCombinerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,10 +30,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AnvilMenu.class)
 public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 
+    @Final
     @Shadow private DataSlot cost;
 
-    @Unique private ItemStack tiered$lastInputItem = ItemStack.EMPTY;
-    @Unique private ResourceLocation tiered$cachedNextModifier = null;
+    @Unique private static final String TIERED_PENDING_MODIFIER = "tiered_pending_reforge";
 
     public AnvilMenuMixin(MenuType<?> type, int syncId, Inventory inventory, ContainerLevelAccess access) {
         super(type, syncId, inventory, access);
@@ -44,8 +45,10 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack materialItem = this.inputSlots.getItem(1);
 
         if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
-            if (!TieredConfig.enableReforgeExpCost) {
+            if (!TieredConfig.enableReforgeExpCost || player.getAbilities().instabuild || player.experienceLevel >= getExpCost(inputItem)) {
                 cir.setReturnValue(true);
+            } else {
+                cir.setReturnValue(false);
             }
         }
     }
@@ -58,25 +61,29 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
             ResourceLocation currentModifierId = inputItem.get(Tiered.MODIFIER);
             if (currentModifierId != null) {
-                if (tiered$cachedNextModifier == null || !ItemStack.isSameItemSameComponents(inputItem, tiered$lastInputItem)) {
-                    tiered$lastInputItem = inputItem.copy();
-                    ResourceLocation newModifierId = ModifierUtils.getRandomAttributeIDFor(inputItem.getItem());
+
+                ResourceLocation pendingModifier = getPendingModifier(inputItem);
+
+                if (pendingModifier == null) {
+                    pendingModifier = ModifierUtils.getRandomAttributeIDFor(inputItem.getItem());
                     int attempts = 0;
-                    while ((newModifierId.equals(currentModifierId) || newModifierId.equals(ModifierUtils.BLANK)) && attempts < 5) {
-                        newModifierId = ModifierUtils.getRandomAttributeIDFor(inputItem.getItem());
+                    while ((pendingModifier.equals(currentModifierId) || pendingModifier.equals(ModifierUtils.BLANK)) && attempts < 5) {
+                        pendingModifier = ModifierUtils.getRandomAttributeIDFor(inputItem.getItem());
                         attempts++;
                     }
-                    tiered$cachedNextModifier = newModifierId;
+                    setPendingModifier(inputItem, pendingModifier);
                 }
 
-                PotentialAttribute nextPotential = Tiered.TIER_DATA.getTiers().get(tiered$cachedNextModifier);
+                PotentialAttribute nextPotential = Tiered.TIER_DATA.getTiers().get(pendingModifier);
                 if (nextPotential != null) {
                     ItemStack result = inputItem.copy();
-                    result.remove(Tiered.MODIFIER);
+                    result.set(Tiered.MODIFIER, pendingModifier);
+                    result.remove(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+
                     this.resultSlots.setItem(0, result);
 
+                    int expCost = TieredConfig.enableReforgeExpCost ? (int) nextPotential.getReforgeExperienceCost() : 0;
                     if (this.cost != null) {
-                        int expCost = TieredConfig.enableReforgeExpCost ? (int) nextPotential.getReforgeExperienceCost() : 0;
                         this.cost.set(expCost);
                     }
 
@@ -84,9 +91,6 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
                     ci.cancel();
                 }
             }
-        } else {
-            tiered$cachedNextModifier = null;
-            tiered$lastInputItem = ItemStack.EMPTY;
         }
     }
 
@@ -96,10 +100,12 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack inputItem = this.inputSlots.getItem(0);
 
         if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
-            if (tiered$cachedNextModifier != null) {
-                PotentialAttribute nextPotential = Tiered.TIER_DATA.getTiers().get(tiered$cachedNextModifier);
+            ResourceLocation pendingModifier = getPendingModifier(inputItem);
+
+            if (pendingModifier != null) {
+                PotentialAttribute nextPotential = Tiered.TIER_DATA.getTiers().get(pendingModifier);
                 if (nextPotential != null) {
-                    outputStack.set(Tiered.MODIFIER, tiered$cachedNextModifier);
+                    outputStack.set(Tiered.MODIFIER, pendingModifier);
 
                     ItemStack hammerForParticles = materialItem.copy();
 
@@ -126,59 +132,22 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
                         this.inputSlots.setItem(1, materialItem);
                     }
 
-                    if (TieredConfig.enableReforgeExpCost && !player.getAbilities().instabuild) {
-                        int expCost = (int) nextPotential.getReforgeExperienceCost();
-                        if (expCost > 0) {
-                            player.giveExperienceLevels(-expCost);
-                        }
+                    int expCost = TieredConfig.enableReforgeExpCost ? (int) nextPotential.getReforgeExperienceCost() : 0;
+                    if (expCost > 0 && !player.getAbilities().instabuild) {
+                        player.giveExperienceLevels(-expCost);
                     }
 
                     final boolean finalHammerBroken = hammerBroken;
 
                     this.access.execute((level, pos) -> {
-                        level.playSound(
-                                null,
-                                pos,
-                                SoundEvents.ANVIL_USE,
-                                SoundSource.BLOCKS,
-                                0.5F,
-                                level.random.nextFloat() * 0.1F + 0.9F
-                        );
+                        level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
 
                         if (level instanceof ServerLevel serverLevel) {
-                            serverLevel.sendParticles(
-                                    ParticleTypes.END_ROD,
-                                    pos.getX() + 0.5D,
-                                    pos.getY() + 1.1D,
-                                    pos.getZ() + 0.5D,
-                                    10,
-                                    0.3D,
-                                    0.2D,
-                                    0.3D,
-                                    0.1D
-                            );
+                            serverLevel.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5D, pos.getY() + 1.1D, pos.getZ() + 0.5D, 10, 0.3D, 0.2D, 0.3D, 0.1D);
 
                             if (finalHammerBroken) {
-                                level.playSound(
-                                        null,
-                                        pos,
-                                        SoundEvents.ITEM_BREAK,
-                                        SoundSource.BLOCKS,
-                                        0.8F,
-                                        0.8F + level.random.nextFloat() * 0.4F
-                                );
-
-                                serverLevel.sendParticles(
-                                        new ItemParticleOption(ParticleTypes.ITEM, hammerForParticles),
-                                        pos.getX() + 0.5D,
-                                        pos.getY() + 1.1D,
-                                        pos.getZ() + 0.5D,
-                                        15,
-                                        0.2D,
-                                        0.1D,
-                                        0.2D,
-                                        0.05D
-                                );
+                                level.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 0.8F, 0.8F + level.random.nextFloat() * 0.4F);
+                                serverLevel.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, hammerForParticles), pos.getX() + 0.5D, pos.getY() + 1.1D, pos.getZ() + 0.5D, 15, 0.2D, 0.1D, 0.2D, 0.05D);
                             }
                         }
                     });
@@ -186,9 +155,6 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
                     if (this.cost != null) {
                         this.cost.set(0);
                     }
-
-                    tiered$cachedNextModifier = null;
-                    tiered$lastInputItem = ItemStack.EMPTY;
 
                     this.broadcastChanges();
                     ci.cancel();
@@ -200,5 +166,33 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     @Unique
     private boolean isValidHammer(ItemStack hammerItem) {
         return hammerItem.is(Tiered.SMITHING_HAMMER);
+    }
+
+    @Unique
+    private int getExpCost(ItemStack inputItem) {
+        ResourceLocation pending = getPendingModifier(inputItem);
+        if (pending != null) {
+            PotentialAttribute attr = Tiered.TIER_DATA.getTiers().get(pending);
+            return attr != null ? (int) attr.getReforgeExperienceCost() : 0;
+        }
+        return 0;
+    }
+
+    @Unique
+    private ResourceLocation getPendingModifier(ItemStack stack) {
+        if (stack.has(net.minecraft.core.component.DataComponents.CUSTOM_DATA)) {
+            var tag = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag();
+            if (tag.contains(TIERED_PENDING_MODIFIER)) {
+                return ResourceLocation.tryParse(tag.getString(TIERED_PENDING_MODIFIER));
+            }
+        }
+        return null;
+    }
+
+    @Unique
+    private void setPendingModifier(ItemStack stack, ResourceLocation modifierId) {
+        var customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+        var updatedTag = customData.update(tag -> tag.putString(TIERED_PENDING_MODIFIER, modifierId.toString()));
+        stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, updatedTag);
     }
 }

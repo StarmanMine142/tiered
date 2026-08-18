@@ -14,18 +14,17 @@ public class PotentialAttribute {
 
 	public static final Codec<PotentialAttribute> CODEC = RecordCodecBuilder.create(
 			i -> i.group(
-							Codec.STRING.optionalFieldOf("id").forGetter(pa -> Optional.ofNullable(pa.getID())),
-							Codec.STRING.optionalFieldOf("literal_name").forGetter(pa -> Optional.ofNullable(pa.getLiteralName())),
+							Codec.STRING.fieldOf("id").forGetter(PotentialAttribute::getID),
+							Codec.STRING.fieldOf("literal_name").forGetter(PotentialAttribute::getLiteralName),
 							Codec.INT.fieldOf("weight").forGetter(PotentialAttribute::getWeight),
 							Codec.INT.fieldOf("reforge_durability_cost").forGetter(PotentialAttribute::getReforgeDurabilityCost),
-							Codec.INT.fieldOf("reforge_experience_cost").forGetter((pa) -> pa.reforge_experience_cost),
+							Codec.INT.fieldOf("reforge_experience_cost").forGetter(PotentialAttribute::getReforgeExperienceCost),
 							ItemVerifier.CODEC.listOf().optionalFieldOf("verifiers", List.of()).forGetter(PotentialAttribute::getVerifiers),
 							ItemVerifier.CODEC.listOf().optionalFieldOf("exclusions", List.of()).forGetter(PotentialAttribute::getExclusions),
 							Style.Serializer.CODEC.fieldOf("style").forGetter(PotentialAttribute::getStyle),
 							AttributeTemplate.CODEC.listOf().fieldOf("attributes").forGetter(PotentialAttribute::getAttributes)
 					)
-					.apply(i, (id, literal_name, weight, reforge_durability_cost, reforge_experience_cost, verifiers, exclusions, style, attributes) ->
-							new PotentialAttribute(id.orElse(null), literal_name.orElse(null), weight, reforge_durability_cost, reforge_experience_cost, verifiers, exclusions, style, attributes))
+					.apply(i, PotentialAttribute::new)
 	);
 
 	private final String id;
@@ -72,7 +71,7 @@ public class PotentialAttribute {
 		return Math.max(reforge_durability_cost, 1);
 	}
 
-	public long getReforgeExperienceCost() {
+	public int getReforgeExperienceCost() {
 		return Math.max(reforge_experience_cost, 1);
 	}
 

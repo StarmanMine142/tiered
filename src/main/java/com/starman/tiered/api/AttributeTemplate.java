@@ -2,12 +2,12 @@ package com.starman.tiered.api;
 
 import com.starman.tiered.Tiered;
 
-import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.*;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.serialization.*;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -51,30 +51,12 @@ public class AttributeTemplate {
 			LENIENT_SLOT_GROUP_CODEC.listOf().optionalFieldOf("required_equipment_slots", List.of())
 					.forGetter(t -> t.requiredEquipmentSlotTypes == null ? List.of() : Arrays.asList(t.requiredEquipmentSlotTypes)),
 			LENIENT_SLOT_GROUP_CODEC.listOf().optionalFieldOf("optional_equipment_slots", List.of())
-					.forGetter(t -> t.optionalEquipmentSlotTypes == null ? List.of() : Arrays.asList(t.optionalEquipmentSlotTypes)),
-			Codec.STRING.listOf().optionalFieldOf("required_accessory_slots", List.of())
-					.forGetter(t -> t.requiredAccessorySlotTypes == null ? List.of() : Arrays.asList(t.requiredAccessorySlotTypes)),
-			Codec.STRING.listOf().optionalFieldOf("optional_accessory_slots", List.of())
-					.forGetter(t -> t.optionalAccessorySlotTypes == null ? List.of() : Arrays.asList(t.optionalAccessorySlotTypes)),
-			Codec.STRING.listOf().optionalFieldOf("required_accessory_groups", List.of())
-					.forGetter(t -> t.requiredAccessoryGroupTypes == null ? List.of() : Arrays.asList(t.requiredAccessoryGroupTypes)),
-			Codec.STRING.listOf().optionalFieldOf("optional_accessory_groups", List.of())
-					.forGetter(t -> t.optionalAccessoryGroupTypes == null ? List.of() : Arrays.asList(t.optionalAccessoryGroupTypes)),
-			Codec.STRING.listOf().optionalFieldOf("required_curio_slots", List.of())
-					.forGetter(t -> t.requiredCurioSlotTypes == null ? List.of() : Arrays.asList(t.requiredCurioSlotTypes)),
-			Codec.STRING.listOf().optionalFieldOf("optional_curio_slots", List.of())
-					.forGetter(t -> t.optionalCurioSlotTypes == null ? List.of() : Arrays.asList(t.optionalCurioSlotTypes))
-	).apply(instance, (type, modifier, reqEquip, optEquip, reqAccSlot, optAccSlot, reqAccGroup, optAccGroup, reqCurio, optCurio) ->
+					.forGetter(t -> t.optionalEquipmentSlotTypes == null ? List.of() : Arrays.asList(t.optionalEquipmentSlotTypes))
+	).apply(instance, (type, modifier, reqEquip, optEquip) ->
 			new AttributeTemplate(
 					type, modifier,
 					reqEquip.toArray(new EquipmentSlotGroup[0]),
-					optEquip.toArray(new EquipmentSlotGroup[0]),
-					reqAccSlot.toArray(new String[0]),
-					optAccSlot.toArray(new String[0]),
-					reqAccGroup.toArray(new String[0]),
-					optAccGroup.toArray(new String[0]),
-					reqCurio.toArray(new String[0]),
-					optCurio.toArray(new String[0])
+					optEquip.toArray(new EquipmentSlotGroup[0])
 			)
 	));
 
@@ -90,39 +72,12 @@ public class AttributeTemplate {
 	@SerializedName("optional_equipment_slots")
 	private final EquipmentSlotGroup[] optionalEquipmentSlotTypes;
 
-	@SerializedName("required_accessory_slots")
-	private final String[] requiredAccessorySlotTypes;
-
-	@SerializedName("optional_accessory_slots")
-	private final String[] optionalAccessorySlotTypes;
-
-	@SerializedName("required_accessory_groups")
-	private final String[] requiredAccessoryGroupTypes;
-
-	@SerializedName("optional_accessory_groups")
-	private final String[] optionalAccessoryGroupTypes;
-
-	@SerializedName("required_curio_slots")
-	private final String[] requiredCurioSlotTypes;
-
-	@SerializedName("optional_curio_slots")
-	private final String[] optionalCurioSlotTypes;
-
 	public AttributeTemplate(String attributeTypeID, AttributeModifier AttributeModifier,
-							 EquipmentSlotGroup[]  requiredEquipmentSlotTypes, EquipmentSlotGroup[]  optionalEquipmentSlotTypes,
-							 String[] requiredAccessorySlotTypes, String[] optionalAccessorySlotTypes,
-							 String[] requiredAccessoryGroupTypes, String[] optionalAccessoryGroupTypes,
-							 String[] requiredCurioSlotTypes, String[] optionalCurioSlotTypes) {
+							 EquipmentSlotGroup[]  requiredEquipmentSlotTypes, EquipmentSlotGroup[]  optionalEquipmentSlotTypes) {
 		this.attributeTypeID = attributeTypeID;
 		this.attributeModifier = AttributeModifier;
 		this.requiredEquipmentSlotTypes = requiredEquipmentSlotTypes;
 		this.optionalEquipmentSlotTypes = optionalEquipmentSlotTypes;
-		this.requiredAccessorySlotTypes = requiredAccessorySlotTypes;
-		this.optionalAccessorySlotTypes = optionalAccessorySlotTypes;
-		this.requiredAccessoryGroupTypes = requiredAccessoryGroupTypes;
-		this.optionalAccessoryGroupTypes = optionalAccessoryGroupTypes;
-		this.requiredCurioSlotTypes = requiredCurioSlotTypes;
-		this.optionalCurioSlotTypes = optionalCurioSlotTypes;
 	}
 
 	public EquipmentSlotGroup[] getRequiredEquipmentSlot() {
@@ -159,37 +114,36 @@ public class AttributeTemplate {
 		return slots.toArray(new EquipmentSlot[0]);
 	}
 
-	public String[] getRequiredAccessorySlot() {
-		return requiredAccessorySlotTypes;
+	public void realize(BiConsumer<Holder<Attribute>, AttributeModifier> actions, EquipmentSlot slot) {
+		ResourceLocation uniqueId = ResourceLocation.fromNamespaceAndPath(
+				Tiered.ID,
+				attributeModifier.id().getPath() + "_" + slot.getName()
+		);
+
+		realize(actions, uniqueId);
 	}
 
-	public String[] getOptionalAccessorySlot() {
-		return optionalAccessorySlotTypes;
-	}
+	public void realizeForComponent(BiConsumer<Holder<Attribute>, AttributeModifier> actions, EquipmentSlot slot) {
+		ResourceLocation uniqueId = ResourceLocation.fromNamespaceAndPath(
+				Tiered.ID,
+				attributeModifier.id().getPath() + "_" + slot.getName()
+		);
 
-	public String[] getRequiredAccessoryGroup() {
-		return requiredAccessoryGroupTypes;
-	}
+		AttributeModifier cloneModifier = new AttributeModifier(
+				uniqueId,
+				attributeModifier.amount(),
+				attributeModifier.operation()
+		);
 
-	public String[] getOptionalAccessoryGroup() {
-		return optionalAccessoryGroupTypes;
-	}
-
-	public String[] getRequiredCurioSlot() {
-		return requiredCurioSlotTypes;
-	}
-
-	public String[] getOptionalCurioSlot() {
-		return optionalCurioSlotTypes;
-	}
-
-	public void realize(BiConsumer<Holder<Attribute>, AttributeModifier> actions, EquipmentSlotGroup slot) {
-		realize(actions, Tiered.MODIFIERS[slot.ordinal()]);
+		Optional<Holder.Reference<Attribute>> key = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeTypeID));
+		if (key.isPresent()) {
+			actions.accept(key.get(), cloneModifier);
+		}
 	}
 
 	private void realize(BiConsumer<Holder<Attribute>, AttributeModifier> actions, ResourceLocation id) {
 		AttributeModifier cloneModifier = new AttributeModifier(
-				id.withPrefix("tiered_"+attributeModifier.id().getPath()),
+				id,
 				attributeModifier.amount(),
 				attributeModifier.operation()
 		);

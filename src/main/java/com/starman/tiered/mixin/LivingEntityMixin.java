@@ -1,7 +1,6 @@
 package com.starman.tiered.mixin;
 
 import com.starman.tiered.Tiered;
-import com.starman.tiered.util.TierHelper;
 import com.starman.tiered.api.*;
 
 import java.util.*;
@@ -11,18 +10,19 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.*;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
     @Shadow @Final private static EntityDataAccessor<Float> DATA_HEALTH_ID;
 
-    @Shadow public abstract double getAttributeValue(net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute> attribute);
+    @Shadow public abstract double getAttributeValue(Holder<Attribute> attribute);
 
     @Unique
     private final Map<EquipmentSlot, ItemStack> tiered$lastEquippedItems = new EnumMap<>(EquipmentSlot.class);
@@ -74,7 +74,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Unique
     private void tiered$applyOrRemoveTierAttributes(LivingEntity entity, ItemStack stack, EquipmentSlot slot, boolean apply) {
-        if (stack.isEmpty() || !TierHelper.hasModifier(stack)) {
+        if (stack.isEmpty() || !Tiered.hasModifier(stack)) {
             return;
         }
 
@@ -101,7 +101,7 @@ public abstract class LivingEntityMixin extends Entity {
                                 instance.removeModifier(modifier.id());
                             }
                         }
-                    }, slotGroup);
+                    }, slot);
                 }
             });
         }

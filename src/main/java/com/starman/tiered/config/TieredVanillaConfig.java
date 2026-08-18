@@ -1,14 +1,13 @@
 package com.starman.tiered.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.client.gui.components.*;
 
 public class TieredVanillaConfig extends Screen {
     private final Screen parent;

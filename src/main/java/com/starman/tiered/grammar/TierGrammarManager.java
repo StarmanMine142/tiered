@@ -10,10 +10,10 @@ import com.starman.tiered.Tiered;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagKey;
+import net.minecraft.core.registries.*;
 import net.minecraft.world.item.*;
 
 public class TierGrammarManager implements SimpleSynchronousResourceReloadListener {

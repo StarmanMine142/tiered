@@ -1,22 +1,21 @@
 package com.starman.tiered.mixin;
 
 import com.starman.tiered.Tiered;
-import com.starman.tiered.api.*;
 import com.starman.tiered.config.TieredConfig;
-import com.starman.tiered.item.TieredItems;
+import com.starman.tiered.api.*;
 
-import com.starman.tiered.util.TierHelper;
+import com.starman.tiered.item.TieredItems;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 
-import net.minecraft.core.particles.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.*;
 import net.minecraft.sounds.*;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.ItemStack;
 
 @Mixin(AnvilMenu.class)
 public abstract class AnvilMenuMixin extends ItemCombinerMenu {
@@ -35,7 +34,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack inputItem = this.inputSlots.getItem(0);
         ItemStack materialItem = this.inputSlots.getItem(1);
 
-        if (TierHelper.hasModifier(inputItem) && isValidHammer(materialItem)) {
+        if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
             if (!TieredConfig.enableReforgeExpCost || player.getAbilities().instabuild || player.experienceLevel >= getExpCost(inputItem)) {
                 cir.setReturnValue(true);
             } else {
@@ -49,7 +48,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack inputItem = this.inputSlots.getItem(0);
         ItemStack materialItem = this.inputSlots.getItem(1);
 
-        if (TierHelper.hasModifier(inputItem) && isValidHammer(materialItem)) {
+        if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
             ResourceLocation currentModifierId = inputItem.get(Tiered.MODIFIER);
             if (currentModifierId != null) {
 
@@ -73,7 +72,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 
                     this.resultSlots.setItem(0, result);
 
-                    int expCost = TieredConfig.enableReforgeExpCost ? nextPotential.getReforgeExperienceCost() : 0;
+                    int expCost = TieredConfig.enableReforgeExpCost ? (int) nextPotential.getReforgeExperienceCost() : 0;
                     if (this.cost != null) {
                         this.cost.set(expCost);
                     }
@@ -90,7 +89,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack materialItem = this.inputSlots.getItem(1);
         ItemStack inputItem = this.inputSlots.getItem(0);
 
-        if (TierHelper.hasModifier(inputItem) && isValidHammer(materialItem)) {
+        if (Tiered.hasModifier(inputItem) && isValidHammer(materialItem)) {
             ResourceLocation pendingModifier = getPendingModifier(inputItem);
 
             if (pendingModifier != null) {

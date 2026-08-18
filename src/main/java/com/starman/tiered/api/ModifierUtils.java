@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 
 public class ModifierUtils {
 
-	public static final ResourceLocation BLANK = ResourceLocation.fromNamespaceAndPath(Tiered.ID, "blank");
+	public static final ResourceLocation BLANK = ResourceLocation.fromNamespaceAndPath("tiered", "blank");
 
 	public static ResourceLocation getRandomAttributeIDFor(Item item) {
 		ResourceLocation itemKey = BuiltInRegistries.ITEM.getKey(item);

@@ -3,8 +3,8 @@ package com.starman.tiered.mixin;
 import com.starman.tiered.api.TieredAttributes;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.*;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.*;

@@ -1,6 +1,5 @@
 package com.starman.tiered.data;
 
-import com.starman.tiered.Tiered;
 import com.starman.tiered.api.TierPool;
 
 import java.util.*;
@@ -13,8 +12,8 @@ import org.apache.logging.log4j.*;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.*;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.server.packs.resources.*;
 
 public class PoolDataLoader extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
 
@@ -65,6 +64,6 @@ public class PoolDataLoader extends SimpleJsonResourceReloadListener implements 
 
     @Override
     public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath(Tiered.ID, "pool_data");
+        return ResourceLocation.fromNamespaceAndPath("tiered", "pool_data");
     }
 }

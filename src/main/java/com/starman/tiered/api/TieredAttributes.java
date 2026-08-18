@@ -1,10 +1,10 @@
 package com.starman.tiered.api;
 
 import com.starman.tiered.Tiered;
-import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.core.*;
 
 public class TieredAttributes {
 

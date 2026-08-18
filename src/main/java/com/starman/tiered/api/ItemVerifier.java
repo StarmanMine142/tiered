@@ -7,10 +7,10 @@ import java.util.Optional;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.core.registries.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
+import net.minecraft.core.registries.*;
 
 public class ItemVerifier {
     public static final Codec<ItemVerifier> CODEC = RecordCodecBuilder.create(

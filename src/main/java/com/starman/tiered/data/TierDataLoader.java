@@ -1,6 +1,5 @@
 package com.starman.tiered.data;
 
-import com.starman.tiered.Tiered;
 import com.starman.tiered.api.*;
 import com.starman.tiered.gson.*;
 
@@ -15,10 +14,10 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.*;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.server.packs.resources.*;
 
 public class TierDataLoader extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
 
@@ -81,6 +80,6 @@ public class TierDataLoader extends SimpleJsonResourceReloadListener implements 
 
     @Override
     public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath(Tiered.ID, "data_loader");
+        return ResourceLocation.fromNamespaceAndPath("tiered", "data_loader");
     }
 }

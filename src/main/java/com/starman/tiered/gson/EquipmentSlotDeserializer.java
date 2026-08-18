@@ -10,6 +10,6 @@ public class EquipmentSlotDeserializer implements JsonDeserializer<EquipmentSlot
 
     @Override
     public EquipmentSlotGroup deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-    	return EquipmentSlotGroup.valueOf(json.getAsString().toUpperCase());
+        return EquipmentSlotGroup.valueOf(json.getAsString().toUpperCase());
     }
 }

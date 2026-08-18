@@ -3,8 +3,8 @@ package com.starman.tiered.mixin;
 import com.starman.tiered.data.TierAffixer;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.*;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;

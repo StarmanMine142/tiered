@@ -7,9 +7,9 @@ import org.jetbrains.annotations.Nullable;
 import com.google.gson.*;
 
 import net.minecraft.ResourceLocationException;
-import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.network.chat.*;
 
 public class StyleSerializer implements JsonDeserializer<Style>, JsonSerializer<Style> {
     @Override

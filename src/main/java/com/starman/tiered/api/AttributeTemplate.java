@@ -123,27 +123,13 @@ public class AttributeTemplate {
 		realize(actions, uniqueId);
 	}
 
-	public void realizeForComponent(BiConsumer<Holder<Attribute>, AttributeModifier> actions, EquipmentSlot slot) {
-		ResourceLocation uniqueId = ResourceLocation.fromNamespaceAndPath(
-				Tiered.ID,
-				attributeModifier.id().getPath() + "_" + slot.getName()
-		);
-
-		AttributeModifier cloneModifier = new AttributeModifier(
-				uniqueId,
-				attributeModifier.amount(),
-				attributeModifier.operation()
-		);
-
-		Optional<Holder.Reference<Attribute>> key = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attributeTypeID));
-		if (key.isPresent()) {
-			actions.accept(key.get(), cloneModifier);
-		}
+	public void realizeGroup(BiConsumer<Holder<Attribute>, AttributeModifier> actions, EquipmentSlotGroup slot) {
+		realize(actions, Tiered.MODIFIERS[slot.ordinal()]);
 	}
 
 	private void realize(BiConsumer<Holder<Attribute>, AttributeModifier> actions, ResourceLocation id) {
 		AttributeModifier cloneModifier = new AttributeModifier(
-				id,
+				id.withPrefix("tiered_"+attributeModifier.id().getPath()),
 				attributeModifier.amount(),
 				attributeModifier.operation()
 		);

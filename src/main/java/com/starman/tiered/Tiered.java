@@ -115,68 +115,12 @@ public class Tiered implements ModInitializer {
     }
 
     public static void attemptToAffixTier(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            ResourceLocation tier = getTier(stack);
-
-            if (tier == null || tier.equals(ModifierUtils.BLANK) || !TIER_DATA.getTiers().containsKey(tier)) {
-                ResourceLocation potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(stack.getItem());
-                if (potentialAttributeID != ModifierUtils.BLANK) {
-                    stack.set(MODIFIER, potentialAttributeID);
-                    applyModifiersToItemStack(stack, potentialAttributeID);
-                }
-            } else {
-                var currentModifiers = stack.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
-                boolean hasTierModifiers = currentModifiers != null && currentModifiers.modifiers().stream()
-                        .anyMatch(entry -> entry.modifier().id().getNamespace().equals(ID));
-
-                if (!hasTierModifiers) {
-                    applyModifiersToItemStack(stack, tier);
-                }
+        if (!hasModifier(stack) && !stack.isEmpty()) {
+            ResourceLocation potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(stack.getItem());
+            if (potentialAttributeID != ModifierUtils.BLANK) {
+                stack.set(MODIFIER, potentialAttributeID);
             }
         }
-    }
-
-    private static void applyModifiersToItemStack(ItemStack stack, ResourceLocation tierId) {
-        PotentialAttribute potentialAttribute = TIER_DATA.getTiers().get(tierId);
-        if (potentialAttribute == null) return;
-
-        net.minecraft.world.item.component.ItemAttributeModifiers defaultModifiers = stack.getItem().components().get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
-
-        net.minecraft.world.item.component.ItemAttributeModifiers.Builder modifierBuilder =
-                net.minecraft.world.item.component.ItemAttributeModifiers.builder();
-
-        if (defaultModifiers != null) {
-            defaultModifiers.modifiers().forEach(entry ->
-                    modifierBuilder.add(entry.attribute(), entry.modifier(), entry.slot())
-            );
-        }
-
-        potentialAttribute.getAttributes().forEach(template -> {
-            for (EquipmentSlot slot : EquipmentSlot.values()) {
-                boolean isPreferred = isPreferredEquipmentSlot(stack, slot);
-
-                boolean matches = false;
-                if (template.getRequiredEquipmentSlot() != null) {
-                    for (EquipmentSlotGroup group : template.getRequiredEquipmentSlot()) {
-                        if (group.test(slot)) { matches = true; break; }
-                    }
-                }
-                if (!matches && template.getOptionalEquipmentSlot() != null && isPreferred) {
-                    for (EquipmentSlotGroup group : template.getOptionalEquipmentSlot()) {
-                        if (group.test(slot)) { matches = true; break; }
-                    }
-                }
-
-                if (matches) {
-                    template.realizeForComponent((holder, modifier) -> {
-                        EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(slot);
-                        modifierBuilder.add(holder, modifier, group);
-                    }, slot);
-                }
-            }
-        });
-
-        stack.set(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, modifierBuilder.build());
     }
 
     public static ResourceLocation id(String path) {

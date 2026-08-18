@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.*;
 import net.minecraft.nbt.*;
@@ -66,12 +66,12 @@ public abstract class ItemStackMixin {
 		return copyTag;
 	}
 
-	@Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V", at = @At("TAIL"))
-	private void tiered$appendAttributes(EquipmentSlot slot, BiConsumer<Holder<Attribute>, AttributeModifier> pAction, CallbackInfo ci) {
+	@Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V", at = @At("TAIL"))
+	private void tiered$appendAttributes(EquipmentSlotGroup slot, BiConsumer<Holder<Attribute>, AttributeModifier> pAction, CallbackInfo ci) {
 		ItemStack thisStack = (ItemStack)(Object)this;
 		Tiered.AppendAttributesToOriginal(thisStack, slot, Tiered.isPreferredEquipmentSlot(thisStack, slot), "AttributeModifiers",
 				template -> template.getRequiredEquipmentSlot(),
 				template -> template.getOptionalEquipmentSlot(),
-				(template) -> template.realize(pAction, slot));
+				(template) -> template.realizeGroup(pAction, slot));
 	}
 }

@@ -1,14 +1,12 @@
 # 1.0.0
-- Removed using [Unionlib](https://modrinth.com/mod/unionlib)
+- Removed usage of [Unionlib](https://modrinth.com/mod/unionlib)
 - Config now uses 3 style of screen, and you can switch
 - Added (or fixed?) reforging
-- Added Tier grammar for langs
-- Items name in langs, what in `lowercase_langs.json` alweys written with lowercase after tier name
+- Added [new features for langs](https://github.com/StarmanMine142/tiered/wiki)
 - 3 hammers replaced with 1 universal hammer
 - Added craft for hammer
 - Hammer uses `handled` parent model
-- Added Ukrainian
-- Added Russian
+- Added Ukrainian and Russian
 - Bow's tiers now used for Crossbow 
 - Added support for [Trinkets](https://modrinth.com/mod/trinkets) slots
 - Added new command for update tier on items

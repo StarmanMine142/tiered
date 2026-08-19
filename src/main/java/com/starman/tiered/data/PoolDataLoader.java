@@ -1,5 +1,6 @@
 package com.starman.tiered.data;
 
+import com.starman.tiered.Tiered;
 import com.starman.tiered.api.TierPool;
 
 import java.util.*;
@@ -64,6 +65,6 @@ public class PoolDataLoader extends SimpleJsonResourceReloadListener implements 
 
     @Override
     public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath("tiered", "pool_data");
+        return ResourceLocation.fromNamespaceAndPath(Tiered.ID, "pool_data");
     }
 }

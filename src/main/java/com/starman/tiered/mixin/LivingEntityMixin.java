@@ -1,16 +1,19 @@
 package com.starman.tiered.mixin;
 
 import com.starman.tiered.Tiered;
+import com.starman.tiered.compat.TrinketsCompat;
 import com.starman.tiered.api.*;
 
 import java.util.*;
+
+import net.fabricmc.loader.api.FabricLoader;
 
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.core.Holder;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -69,6 +72,10 @@ public abstract class LivingEntityMixin extends Entity {
 
                 tiered$lastEquippedItems.put(slot, currentItem.copy());
             }
+        }
+
+        if (FabricLoader.getInstance().isModLoaded("trinkets")) {
+            TrinketsCompat.tickTrinkets(livingEntity);
         }
     }
 

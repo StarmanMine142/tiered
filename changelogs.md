@@ -10,3 +10,5 @@
 - Added Ukrainian
 - Added Russian
 - Bow's tiers now used for Crossbow 
+- Added support for [Trinkets](https://modrinth.com/mod/trinkets) slots
+- Added new command for update tier on items

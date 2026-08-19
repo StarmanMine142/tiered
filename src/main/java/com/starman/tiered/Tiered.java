@@ -1,5 +1,6 @@
 package com.starman.tiered;
 
+import com.starman.tiered.command.TieredCommands;
 import com.starman.tiered.config.TieredConfig;
 import com.starman.tiered.item.TieredItems;
 import com.starman.tiered.network.ClientboundTierSyncerPacket;
@@ -11,12 +12,11 @@ import java.util.function.*;
 
 import org.apache.logging.log4j.*;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.*;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -37,6 +37,9 @@ public class Tiered implements ModInitializer {
         TieredConfig.load();
         TieredAttributes.register();
         TieredItems.register();
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            TieredCommands.register(dispatcher);
+        });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
@@ -65,28 +68,28 @@ public class Tiered implements ModInitializer {
     public static final PoolDataLoader POOL_DATA = new PoolDataLoader();
 
     public static final ResourceLocation[] MODIFIERS = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath("tiered", "any"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "mainhand"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "offhand"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "hand"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "boots"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "leggings"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "chestplates"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "helmets"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "armor"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "body"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory1"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory2"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory3"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory4"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory5"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory6"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory7"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory8"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "accessory9"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "necklaces"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "backs"),
-            ResourceLocation.fromNamespaceAndPath("tiered", "rings")
+            ResourceLocation.fromNamespaceAndPath(ID, "any"),
+            ResourceLocation.fromNamespaceAndPath(ID, "mainhand"),
+            ResourceLocation.fromNamespaceAndPath(ID, "offhand"),
+            ResourceLocation.fromNamespaceAndPath(ID, "hand"),
+            ResourceLocation.fromNamespaceAndPath(ID, "boots"),
+            ResourceLocation.fromNamespaceAndPath(ID, "leggings"),
+            ResourceLocation.fromNamespaceAndPath(ID, "chestplates"),
+            ResourceLocation.fromNamespaceAndPath(ID, "helmets"),
+            ResourceLocation.fromNamespaceAndPath(ID, "armor"),
+            ResourceLocation.fromNamespaceAndPath(ID, "body"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory1"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory2"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory3"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory4"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory5"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory6"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory7"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory8"),
+            ResourceLocation.fromNamespaceAndPath(ID, "accessory9"),
+            ResourceLocation.fromNamespaceAndPath(ID, "necklaces"),
+            ResourceLocation.fromNamespaceAndPath(ID, "backs"),
+            ResourceLocation.fromNamespaceAndPath(ID, "rings")
     };
 
     public static final DataComponentType<ResourceLocation> MODIFIER = Registry.register(

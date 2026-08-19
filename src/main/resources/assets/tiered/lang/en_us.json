@@ -74,6 +74,16 @@
 	"config.tiered.type.none": "Selection",
 	"config.tiered.tooltip.mod_required": "Required mod is not installed: %s",
 
+	"commands.tiered.updatetier.everything.success.all": "Successfully updated tiers of %s items for %s entities",
+	"commands.tiered.updatetier.everything.success.one": "Successfully updated tiers of %s items for %s",
+	"commands.tiered.updatetier.only.success.all": "Successfully updated tier of %s for %s entities",
+	"commands.tiered.updatetier.only.success.one": "Successfully updated tier of %s for %s",
+	"commands.tiered.updatetier.everything.fail.all": "Failed to update tiers of %s items for %s entities",
+	"commands.tiered.updatetier.everything.fail.one": "Failed to update tiers of %s items for %s",
+	"commands.tiered.updatetier.only.fail.all": "Failed to update tier of %s for %s entities",
+	"commands.tiered.updatetier.only.fail.one": "Failed to update tier of %s for %s",
+	"commands.tiered.updatetier.only.fail.noitem": "There is no item in the main hand!",
+
 	"modmenu.descriptionTranslation.tiered": "Adds tiers to equipment.",
 	"fml.menu.mods.info.description.tiered": "Adds tiers to equipment."
 }

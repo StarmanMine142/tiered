@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 import java.util.*;
 
 import com.google.gson.annotations.SerializedName;
+
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mojang.serialization.*;
 
@@ -16,16 +17,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 
 public class AttributeTemplate {
-	public static final Codec<EquipmentSlotGroup> LENIENT_SLOT_GROUP_CODEC = Codec.STRING.xmap(
-			s -> {
-				String lower = s.toLowerCase(Locale.ROOT);
-				for (EquipmentSlotGroup group : EquipmentSlotGroup.values()) {
-					if (group.getSerializedName().equals(lower)) return group;
-				}
-				throw new IllegalArgumentException("Unknown EquipmentSlotGroup: " + s);
-			},
-			EquipmentSlotGroup::getSerializedName
-	);
+	public static final Codec<String> LENIENT_SLOT_GROUP_CODEC = Codec.STRING;
+
 	private static final Codec<AttributeModifier.Operation> LENIENT_OPERATION_CODEC = Codec.STRING.xmap(
 			s -> {
 				String lower = s.toLowerCase(Locale.ROOT);
@@ -36,6 +29,7 @@ public class AttributeTemplate {
 			},
 			AttributeModifier.Operation::getSerializedName
 	);
+
 	public static final MapCodec<AttributeModifier> MAP_CODEC = RecordCodecBuilder.mapCodec(
 			i -> i.group(
 							ResourceLocation.CODEC.fieldOf("id").forGetter(AttributeModifier::id),
@@ -55,8 +49,8 @@ public class AttributeTemplate {
 	).apply(instance, (type, modifier, reqEquip, optEquip) ->
 			new AttributeTemplate(
 					type, modifier,
-					reqEquip.toArray(new EquipmentSlotGroup[0]),
-					optEquip.toArray(new EquipmentSlotGroup[0])
+					reqEquip.toArray(new String[0]),
+					optEquip.toArray(new String[0])
 			)
 	));
 
@@ -67,24 +61,24 @@ public class AttributeTemplate {
 	private final AttributeModifier attributeModifier;
 
 	@SerializedName("required_equipment_slots")
-	private final EquipmentSlotGroup[] requiredEquipmentSlotTypes;
+	private final String[] requiredEquipmentSlotTypes;
 
 	@SerializedName("optional_equipment_slots")
-	private final EquipmentSlotGroup[] optionalEquipmentSlotTypes;
+	private final String[] optionalEquipmentSlotTypes;
 
 	public AttributeTemplate(String attributeTypeID, AttributeModifier AttributeModifier,
-							 EquipmentSlotGroup[]  requiredEquipmentSlotTypes, EquipmentSlotGroup[]  optionalEquipmentSlotTypes) {
+							 String[] requiredEquipmentSlotTypes, String[] optionalEquipmentSlotTypes) {
 		this.attributeTypeID = attributeTypeID;
 		this.attributeModifier = AttributeModifier;
 		this.requiredEquipmentSlotTypes = requiredEquipmentSlotTypes;
 		this.optionalEquipmentSlotTypes = optionalEquipmentSlotTypes;
 	}
 
-	public EquipmentSlotGroup[] getRequiredEquipmentSlot() {
+	public String[] getRequiredEquipmentSlot() {
 		return requiredEquipmentSlotTypes;
 	}
 
-	public EquipmentSlotGroup[] getOptionalEquipmentSlot() {
+	public String[] getOptionalEquipmentSlot() {
 		return optionalEquipmentSlotTypes;
 	}
 
@@ -93,8 +87,13 @@ public class AttributeTemplate {
 		if (requiredEquipmentSlotTypes != null)
 			for (EquipmentSlot slot : EquipmentSlot.values()) {
 				if (!slots.contains(slot)) {
-					for (EquipmentSlotGroup group : requiredEquipmentSlotTypes) {
-						if (group.test(slot)) slots.add(slot);
+					for (String groupStr : requiredEquipmentSlotTypes) {
+						try {
+							EquipmentSlotGroup group = EquipmentSlotGroup.valueOf(groupStr.toUpperCase());
+							if (group.test(slot)) slots.add(slot);
+						} catch (IllegalArgumentException ignored) {
+
+						}
 					}
 				}
 			}
@@ -106,8 +105,12 @@ public class AttributeTemplate {
 		if (optionalEquipmentSlotTypes != null)
 			for (EquipmentSlot slot : EquipmentSlot.values()) {
 				if (!slots.contains(slot)) {
-					for (EquipmentSlotGroup group : optionalEquipmentSlotTypes) {
-						if (group.test(slot)) slots.add(slot);
+					for (String groupStr : optionalEquipmentSlotTypes) {
+						try {
+							EquipmentSlotGroup group = EquipmentSlotGroup.valueOf(groupStr.toUpperCase());
+							if (group.test(slot)) slots.add(slot);
+						} catch (IllegalArgumentException ignored) {
+						}
 					}
 				}
 			}

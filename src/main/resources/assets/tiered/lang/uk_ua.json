@@ -74,6 +74,16 @@
 	"config.tiered.type.none": "Вибір",
 	"config.tiered.tooltip.mod_required": "Потрібний мод не встановлено: %s",
 
+	"commands.tiered.updatetier.everything.success.all": "Успішно оновлено посилення у %s предметів для %s сутностей",
+	"commands.tiered.updatetier.everything.success.one": "Успішно оновлено посилення у %s предметів для %s",
+	"commands.tiered.updatetier.only.success.all": "Успішно оновлено посилення у %s для %s сутностей",
+	"commands.tiered.updatetier.only.success.one": "Успішно оновлено посилення у %s для %s",
+	"commands.tiered.updatetier.everything.fail.all": "Не вдалося оновити посилення у %s предметів для %s сутностей",
+	"commands.tiered.updatetier.everything.fail.one": "Не вдалося оновити посилення у %s предметів для %s",
+	"commands.tiered.updatetier.only.fail.all": "Не вдалося оновити посилення у %s для %s сутностей",
+	"commands.tiered.updatetier.only.fail.one": "Не вдалося оновити посилення у %s для %s",
+	"commands.tiered.updatetier.only.fail.noitem": "В основній руці немає предмета!",
+
 	"modmenu.descriptionTranslation.tiered": "Додає посилення для спорядження.",
 	"fml.menu.mods.info.description.tiered": "Додає посилення для спорядження."
 }

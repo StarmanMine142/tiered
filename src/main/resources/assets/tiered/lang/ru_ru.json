@@ -74,6 +74,16 @@
 	"config.tiered.type.none": "Выбор",
 	"config.tiered.tooltip.mod_required": "Требуемый мод не установлено: %s",
 
+	"commands.tiered.updatetier.everything.success.all": "Успешно обновлено усиления у %s предметов для %s сущностей",
+	"commands.tiered.updatetier.everything.success.one": "Успешно обновлено усиления у %s предметов для %s",
+	"commands.tiered.updatetier.only.success.all": "Успешно обновлено усиление у %s для %s сущностей",
+	"commands.tiered.updatetier.only.success.one": "Успешно обновлено усиление у %s для %s",
+	"commands.tiered.updatetier.everything.fail.all": "Не получилось обновить усиления у %s предметов для %s сущностей",
+	"commands.tiered.updatetier.everything.fail.one": "Не получилось обновить усиления у %s предметов для %s",
+	"commands.tiered.updatetier.only.fail.all": "Не получилось обновить усиление у %s для %s сущностей",
+	"commands.tiered.updatetier.only.fail.one": "Не получилось обновить усиление у %s для %s",
+	"commands.tiered.updatetier.only.fail.noitem": "В главной руке нету предмета!",
+
 	"modmenu.descriptionTranslation.tiered": "Добавляет усиления для снаряжения.",
 	"fml.menu.mods.info.description.tiered": "Добавляет усиления для снаряжения."
 }

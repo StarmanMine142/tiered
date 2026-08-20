@@ -14,7 +14,8 @@
         "amount": 0.625
       },
       "optional_equipment_slots": [
-        "MAINHAND"
+        "MAINHAND",
+        "head/face"
       ]
     },
     {
@@ -25,7 +26,8 @@
         "amount": 1
       },
       "optional_equipment_slots": [
-        "MAINHAND"
+        "MAINHAND",
+        "head/face"
       ]
     },
     {
@@ -36,7 +38,8 @@
         "amount": 0.5
       },
       "optional_equipment_slots": [
-        "MAINHAND"
+        "MAINHAND",
+        "head/face"
       ]
     }
   ]

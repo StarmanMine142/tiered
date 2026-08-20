@@ -2,6 +2,7 @@ package com.starman.tiered.data;
 
 import com.starman.tiered.Tiered;
 import com.starman.tiered.api.TierPool;
+import com.starman.tiered.gson.EquipmentSlotDeserializer;
 
 import java.util.*;
 
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.server.packs.resources.*;
 
 public class PoolDataLoader extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
@@ -21,6 +23,7 @@ public class PoolDataLoader extends SimpleJsonResourceReloadListener implements 
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .disableHtmlEscaping()
+            .registerTypeAdapter(EquipmentSlotGroup.class, new EquipmentSlotDeserializer())
             .create();
 
     private static final String PARSING_ERROR_MESSAGE = "Parsing error loading recipe {}";

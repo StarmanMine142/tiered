@@ -77,19 +77,7 @@ public class Tiered implements ModInitializer {
             ResourceLocation.fromNamespaceAndPath(ID, "chestplates"),
             ResourceLocation.fromNamespaceAndPath(ID, "helmets"),
             ResourceLocation.fromNamespaceAndPath(ID, "armor"),
-            ResourceLocation.fromNamespaceAndPath(ID, "body"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory1"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory2"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory3"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory4"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory5"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory6"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory7"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory8"),
-            ResourceLocation.fromNamespaceAndPath(ID, "accessory9"),
-            ResourceLocation.fromNamespaceAndPath(ID, "necklaces"),
-            ResourceLocation.fromNamespaceAndPath(ID, "backs"),
-            ResourceLocation.fromNamespaceAndPath(ID, "rings")
+            ResourceLocation.fromNamespaceAndPath(ID, "body")
     };
 
     public static final DataComponentType<ResourceLocation> MODIFIER = Registry.register(

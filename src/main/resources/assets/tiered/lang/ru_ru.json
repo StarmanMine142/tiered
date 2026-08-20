@@ -52,6 +52,7 @@
 	"tier.tiered.spears.devastator": "Разрушительный|Разрушительное",
 
 	"item.tiered.smithing_hammer": "Кузнечный молот",
+	"item.tiered.tier_debug_item": "Предмет отладки усиления",
 
 	"attribute.name.generic.critical_damage": "Критический урон",
 	"attribute.name.generic.critical_rate": "Частота критического урона",

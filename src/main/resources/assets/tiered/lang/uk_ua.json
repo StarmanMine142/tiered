@@ -52,6 +52,7 @@
 	"tier.tiered.spears.devastator": "Руйнівний",
 
 	"item.tiered.smithing_hammer": "Ковальський молот",
+	"item.tiered.tier_debug_item": "Предмет налагодження посилення",
 
 	"attribute.name.generic.critical_damage": "критичної шкоди",
 	"attribute.name.generic.critical_rate": "частоти критичної шкоди",

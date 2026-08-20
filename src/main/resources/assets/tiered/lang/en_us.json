@@ -52,6 +52,7 @@
 	"tier.tiered.spears.devastator": "Devastator",
 
 	"item.tiered.smithing_hammer": "Smithing Hammer",
+	"item.tiered.tier_debug_item": "Tier Debug Item",
 
 	"attribute.name.generic.critical_damage": "Critical Damage",
 	"attribute.name.generic.critical_rate": "Critical Rate",

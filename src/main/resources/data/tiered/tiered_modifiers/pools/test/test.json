@@ -1,0 +1,13 @@
+{
+  "weight": 1,
+  "verifiers": [
+    {
+      "id": "tiered:tier_debug_item"
+    }
+  ],
+  "tiers": [
+    "tiered:melee_weapons/epic",
+    "tiered:melee_weapons/legendary",
+    "tiered:melee_weapons/rare"
+  ]
+}

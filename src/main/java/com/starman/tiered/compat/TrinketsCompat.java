@@ -23,8 +23,6 @@ public class TrinketsCompat {
             component.forEach((slotReference, stack) -> {
                 SlotType slotType = slotReference.inventory().getSlotType();
 
-                String group = slotType.getGroup();
-                String name = slotType.getName();
                 String slotId = slotType.getId();
                 int index = slotReference.index();
 

@@ -13,7 +13,7 @@
     "source": "${mod_source}"
   },
   "license": "${mod_license}",
-  "icon": "assets/${mod_id}/pack.png",
+  "icon": "assets/${mod_id}/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -37,6 +37,8 @@
   },
   "suggests": {
     "cloth-config": "*",
-    "modmenu": "*"
+    "yet_another_config_lib_v3": "*",
+    "modmenu": "*",
+    "trinkets": "*"
   }
 }
